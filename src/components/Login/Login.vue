@@ -2,7 +2,7 @@
   <transition name="slide">
     <div class="login">
       <h1>CardShare Login</h1>
-      <input type="text" class="user" placeholder="用户名" v-model="userName"><br/>
+      <input type="text" class="user" placeholder="邮箱" v-model="loginUserEmail"><br/>
       <input type="password" class="password" placeholder="密码" v-model="userPwd"><br/>
       <div class="logbtn" @click="login">登陆</div>
       <div class="line">
@@ -20,11 +20,12 @@
 import modal from "base/modal/modal";
 import axios from "axios";
 import MD5 from "crypto-js/md5";
+import { emailCheck, pwdCheck } from "common/js/util";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      userName: "",
+      loginUserEmail: "",
       userPwd: "",
       msg: "",
       mdShow: false
@@ -32,15 +33,15 @@ export default {
   },
   methods: {
     login() {
-      if (this.userName.trim() == "" || this.userPwd.trim() == "") {
-        this.msg = "不能为空";
+      if (!emailCheck(this.loginUserEmail) || !pwdCheck(this.userPwd)) {
+        this.msg = "邮箱或密码格式不正确";
         this.mdShow = true;
-        this.userName = "";
+        this.loginUserEmail = "";
         this.userPwd = "";
       } else {
         axios
           .post("/users/login", {
-            userName: this.userName,
+            loginUserEmail: this.loginUserEmail,
             userPwd: MD5(this.userPwd).toString()
           })
           .then(res => {

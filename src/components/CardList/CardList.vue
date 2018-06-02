@@ -1,10 +1,14 @@
 <template>
   <div class="cardlist">
-    <listview :data="cardList" :loading="loading" @select="setDetailCard" v-show="userName">
+    <div class="header">
+      <span>名片夹</span>
+      <i class="icon iconfont icon-search"></i>
+    </div>
+    <listview :data="cardList" :loading="loading" @select="setDetailCard" v-show="loginUserEmail" class="list">
     </listview>
-    <router-link class="loginbtn" v-show="!userName" to="/Login">立刻登陆</router-link>
-    <router-link class="addbtn" v-show="!cardList.length&&userName" to="/AddCard">添加第一张名片</router-link>
-    <btn class="btn" v-show="userName"></btn>
+    <router-link class="loginbtn" v-show="!loginUserEmail" to="/Login">立刻登陆</router-link>
+    <router-link class="addbtn" v-show="!cardList.length&&loginUserEmail" to="/AddCard">添加第一张名片</router-link>
+    <btn class="btn" v-show="loginUserEmail"></btn>
   </div>
 </template>
 
@@ -21,13 +25,13 @@ export default {
   data() {
     return {
       cardList: [],
-      userName: "",
+      loginUserEmail: "",
       loading: true
     };
   },
   mounted() {
-    if (this.$cookie.get("userName")) {
-      this.userName = this.$cookie.get("userName");
+    if (this.$cookie.get("loginUserEmail")) {
+      this.loginUserEmail = this.$cookie.get("loginUserEmail");
       this._getCardList();
     }
   },
@@ -35,7 +39,7 @@ export default {
     _getCardList() {
       axios
         .post("/users/getCardList", {
-          userName: this.$cookie.get("userName")
+          loginUserEmail: this.$cookie.get("loginUserEmail")
         })
         .then(res => {
           if (res.data.status == 0) {
@@ -94,7 +98,7 @@ export default {
     ...mapGetters(["refresh"])
   },
   activated() {
-    this.userName = this.$cookie.get("userName");
+    this.loginUserEmail = this.$cookie.get("loginUserEmail");
     if (this.refresh) {
       this._getCardList();
     }
@@ -122,6 +126,23 @@ export default {
   top 0
   // 必须设置z-index大于tab 不然子元素会被tab覆盖
   z-index 20
+  margin-bottom 45px
+
+  .header
+    background-color $color-theme
+    width 100%
+    height 44px
+    line-height 44px
+    padding-left 10px
+    color #fff
+    font-size 18px
+    border-bottom 1px solid #fff
+    position relative
+
+    i
+      font-weight bold
+      position absolute
+      right 30px
 
   .loginbtn
     position absolute
@@ -156,6 +177,6 @@ export default {
   .btn
     position absolute
     right 20px
-    bottom 20px
+    bottom 0px
 </style>
 

@@ -16,7 +16,12 @@
 
 <script>
 import axios from "axios";
-import { getCardId } from "common/js/util";
+import {
+  getCardId,
+  emailCheck,
+  phoneNumCheck,
+  stringCheck
+} from "common/js/util";
 import { mapMutations } from "vuex";
 import modal from "base/modal/modal";
 
@@ -32,21 +37,31 @@ export default {
   },
   methods: {
     add() {
-      if (this.userName.trim() == "" || this.phoneNum.trim() == "") {
-        this.msg = "姓名和电话不能为空";
+      if (!stringCheck(this.userName)) {
+        this.msg = "姓名不能为空";
+        this.mdShow = true;
+        return;
+      }
+      if (!phoneNumCheck(this.phoneNum)) {
+        this.msg = "手机号码不符合规范";
+        this.mdShow = true;
+        return;
+      }
+      if (!emailCheck(this.email)) {
+        this.msg = "邮箱不符合规范";
         this.mdShow = true;
         return;
       }
       let card = {
-        cardid: getCardId(this.$cookie.get("userName")),
+        cardid: getCardId(this.$cookie.get("loginUserEmail")),
         userName: this.userName,
         phoneNum: this.phoneNum,
         email: this.email,
         key: ""
       };
       axios
-        .post("/users/addCart", {
-          user: this.$cookie.get("userName"),
+        .post("/users/addCard", {
+          loginUserEmail: this.$cookie.get("loginUserEmail"),
           card: card
         })
         .then(res => {

@@ -33,18 +33,18 @@ export default {
       }
     },
     quit() {
-      this.$cookie.delete("userName");
+      this.$cookie.delete("loginUserEmail");
       this.$router.push({ path: "/Login" });
     }
   },
   computed: {
     name() {
-      return this.$cookie.get("userName")
-        ? this.$cookie.get("userName")
+      return this.$cookie.get("loginUserEmail")
+        ? this.$cookie.get("loginUserEmail")
         : "登陆/注册";
     },
     isshow() {
-      return this.$cookie.get("userName") ? true : false;
+      return this.$cookie.get("loginUserEmail") ? true : false;
     }
   }
 };

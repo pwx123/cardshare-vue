@@ -9,8 +9,8 @@
       </div>
       <div class="bg-layer" ref="layer">
       </div>
-      <scroll @scroll="scroll" :listen-scroll="listenScroll" :probe-type="probetype" class="scrolldetail">
-        <ul class="scrolldetailul">
+      <scroll @scroll="scroll" :listen-scroll="listenScroll" :probe-type="probetype" class="scrolldetail" ref="scrolldetail">
+        <ul class="scrolldetailul" ref="scrolldetailul">
           <li>
             <span>姓名</span>
             <span class="value" v-show="!isEdit">{{card.userName}}</span>
@@ -18,12 +18,16 @@
           </li>
           <li>
             <span>电话</span>
-            <span class="value" v-show="!isEdit">{{card.phoneNum}}</span>
+            <span class="value" v-show="!isEdit">
+              <a :href="'tel:'+card.phoneNum">{{card.phoneNum}}</a>
+            </span>
             <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.phoneNum">
           </li>
           <li>
             <span>邮箱</span>
-            <span class="value" v-show="!isEdit">{{card.email}}</span>
+            <span class="value" v-show="!isEdit">
+              <a :href="'mailto:'+card.email">{{card.email}}</a>
+            </span>
             <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.email">
           </li>
           <li class="li-btn">
@@ -31,7 +35,7 @@
             <span class="delete" @click="removeOrsave">{{isEdit?'保存':'删除'}}</span>
           </li>
           <li class="li-btn">
-            <router-link to="/Send" class="share">分享</router-link>
+            <spank class="share" @click="share">分享</spank>
           </li>
         </ul>
       </scroll>
@@ -45,6 +49,29 @@
         </div>
       </div>
       <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+      <div class="modalshare" v-show="modalshare">
+        <div class="shareContainer">
+          <div class="shareItem shareItem-QQ">
+            <i class="icon iconfont icon-QQ"></i>
+            <span>分享到QQ</span>
+          </div>
+          <div class="shareItem shareItem-weixin">
+            <i class="icon iconfont icon-weixin"></i>
+            <span>分享到微信</span>
+          </div>
+          <div class="shareItem">
+            <span>
+              <router-link to="/Send">面对面分享</router-link>
+            </span>
+          </div>
+          <div class="shareItem">
+            <span>更多...</span>
+          </div>
+          <div class="shareItem shareItem-cancel">
+            <span @click="closeShare">取消</span>
+          </div>
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -52,6 +79,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { mapMutations } from "vuex";
+import { emailCheck, phoneNumCheck, stringCheck } from "common/js/util";
 import axios from "axios";
 import scroll from "base/scroll/scroll";
 import modal from "base/modal/modal";
@@ -68,6 +96,7 @@ export default {
       slide: "slide",
       color: "#" + this.$route.query.color,
       canremove: false,
+      modalshare: false,
       msg: "",
       mdShow: false
     };
@@ -98,10 +127,16 @@ export default {
     cencel() {
       this.canremove = false;
     },
+    share() {
+      this.modalshare = true;
+    },
+    closeShare() {
+      this.modalshare = false;
+    },
     remove() {
       axios
         .post("/users/removeCard", {
-          userName: this.$cookie.get("userName"),
+          loginUserEmail: this.$cookie.get("loginUserEmail"),
           cardId: this.card.cardid
         })
         .then(res => {
@@ -115,17 +150,24 @@ export default {
     },
     removeOrsave() {
       if (this.isEdit) {
-        if (
-          this.editcard.userName.trim() == "" ||
-          this.editcard.phoneNum.trim() == ""
-        ) {
-          this.msg = "姓名和电话不能为空";
+        if (!stringCheck(this.editcard.userName)) {
+          this.msg = "姓名不能为空";
+          this.mdShow = true;
+          return;
+        }
+        if (!phoneNumCheck(this.editcard.phoneNum)) {
+          this.msg = "手机号码不符合规范";
+          this.mdShow = true;
+          return;
+        }
+        if (!emailCheck(this.editcard.email)) {
+          this.msg = "邮箱不符合规范";
           this.mdShow = true;
           return;
         }
         axios
           .post("/users/editCard", {
-            userName: this.$cookie.get("userName"),
+            loginUserEmail: this.$cookie.get("loginUserEmail"),
             card: this.editcard
           })
           .then(res => {
@@ -146,6 +188,10 @@ export default {
         this.$router.push("/CardList");
         return;
       }
+      setTimeout(() => {
+        this.$refs.scrolldetailul.style.height =
+          this.$refs.scrolldetail.$el.offsetHeight + 250 - 50 + "px";
+      }, 20);
     },
     closeMd() {
       this.mdShow = false;
@@ -254,8 +300,6 @@ export default {
     width 100%
 
     .scrolldetailul
-      min-height 800px
-
       li
         margin 0 40px
         height 60px
@@ -364,6 +408,52 @@ export default {
 
         .btncancel
           background-color #ec4c5d
+
+  .modalshare
+    position fixed
+    top 0
+    left 0
+    right 0
+    bottom 0
+    background rgba(238, 238, 238, 0.5)
+    animation comein 0.5s
+    display flex
+    align-items center
+    justify-content center
+
+    .shareContainer
+      width 200px
+      border 1px solid #000
+      background-color #fff
+      border-radius 10px
+
+      .shareItem
+        width 70%
+        height 35px
+        margin 0 auto
+        margin-bottom 20px
+        line-height 35px
+        text-align center
+        border 1px solid #000
+        border-radius 10px
+        font-size 16px
+
+      .shareItem-QQ
+        margin-top 20px
+
+        i
+          font-size 20px
+          color #206cba
+
+      .shareItem-weixin
+        i
+          font-size 20px
+          color #62b900
+
+      .shareItem-cancel
+        background-color #ec4c5d
+        color #fff
+        width 50%
 
 @keyframes comein
   from

@@ -37,7 +37,7 @@ export default {
     };
   },
   mounted() {
-    if (!this.$cookie.get("userName")) {
+    if (!this.$cookie.get("loginUserEmail")) {
       this.$router.push({ path: "/CardList" });
       return;
     } else {
@@ -46,14 +46,14 @@ export default {
   },
   methods: {
     startCon() {
-      this.user = this.$cookie.get("userName");
+      this.user = this.$cookie.get("loginUserEmail");
       this.startReceive();
     },
     receive() {
-      this.card.cardid = getCardId(this.$cookie.get("userName"));
+      this.card.cardid = getCardId(this.user);
       axios
-        .post("/users/addCart", {
-          user: this.$cookie.get("userName"),
+        .post("/users/addCard", {
+          loginUserEmail: this.$cookie.get("loginUserEmail"),
           card: this.card
         })
         .then(res => {

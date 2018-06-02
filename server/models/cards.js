@@ -2,7 +2,7 @@ let mongoose = require('mongoose')
 let Schema = mongoose.Schema
 ObjectId = require('mongodb').ObjectID
 let cardSchema = new Schema({
-  "user": String,
+  "loginUserEmail": String,
   "cardList": [{
     "cardid": String,
     "key": String,

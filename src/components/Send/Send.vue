@@ -38,17 +38,18 @@ export default {
     };
   },
   mounted() {
-    if (!this.$cookie.get("userName")) {
+    if (!this.$cookie.get("loginUserEmail")) {
       this.$router.push({ path: "/CardList" });
       return;
     } else {
-      this.user = this.$cookie.get("userName");
+      this.user = this.$cookie.get("loginUserEmail");
       this.startSend();
     }
   },
   methods: {
     closeMd() {
       this.mdShow = false;
+      this.$router.push({ path: "/CardList" });
     },
     startSend() {
       this.$socket.open();

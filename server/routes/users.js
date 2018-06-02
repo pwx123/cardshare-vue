@@ -2,12 +2,13 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/users')
 var Card = require('../models/cards')
+var Event = require('../models/events')
 var getKey = require('./../utils/util')
 
 /* GET users listing. */
 router.post('/login', function (req, res, next) {
   let param = {
-    userName: req.body.userName,
+    loginUserEmail: req.body.loginUserEmail,
     userPwd: req.body.userPwd
   };
   User.findOne(param, (err, doc) => {
@@ -19,7 +20,7 @@ router.post('/login', function (req, res, next) {
       });
     } else {
       if (doc) {
-        res.cookie("userName", doc.userName, {
+        res.cookie("loginUserEmail", doc.loginUserEmail, {
           path: "/",
           maxAge: 1000 * 60 * 60
         });
@@ -27,7 +28,7 @@ router.post('/login', function (req, res, next) {
           status: "0",
           msg: "登陆成功",
           result: {
-            userName: doc.userName
+            loginUserEmail: doc.loginUserEmail
           }
         });
       } else {
@@ -110,14 +111,16 @@ router.post('/login', function (req, res, next) {
 //     })
 // })
 router.post('/reg', function (req, res, next) {
-  let userName = req.body.userName;
+  let loginUserEmail = req.body.loginUserEmail;
   let userPwd = req.body.userPwd;
   let newUser = new User({
-    userName: userName,
-    userPwd: userPwd
+    loginUserEmail: loginUserEmail,
+    userPwd: userPwd,
+    userName: "",
+    newEventId: ""
   });
   User.find({
-    userName: userName
+    loginUserEmail: loginUserEmail
   }, (err, doc) => {
     if (err) {
       res.json({
@@ -145,7 +148,7 @@ router.post('/reg', function (req, res, next) {
               status: "0",
               msg: "注册成功",
               result: {
-                userName: userName
+                loginUserEmail: loginUserEmail
               }
             });
           }
@@ -156,9 +159,9 @@ router.post('/reg', function (req, res, next) {
 })
 
 router.post('/getCardList', function (req, res, next) {
-  let userName = req.body.userName;
+  let loginUserEmail = req.body.loginUserEmail;
   Card.findOne({
-    user: userName
+    loginUserEmail: loginUserEmail
   }, (err, doc) => {
     if (err) {
       res.json({
@@ -185,10 +188,10 @@ router.post('/getCardList', function (req, res, next) {
 })
 
 router.post('/removeCard', function (req, res, next) {
-  let user = req.body.userName;
+  let loginUserEmail = req.body.loginUserEmail;
   let cardId = req.body.cardId;
   Card.update({
-    user: user
+    loginUserEmail: loginUserEmail
   }, {
     $pull: {
       cardList: {
@@ -213,14 +216,14 @@ router.post('/removeCard', function (req, res, next) {
 })
 
 router.post('/editCard', function (req, res, next) {
-  let user = req.body.userName
+  let loginUserEmail = req.body.loginUserEmail
   let cardid = req.body.card.cardid;
   let userName = req.body.card.userName;
   let key = getKey(userName);
   let phoneNum = req.body.card.phoneNum;
   let email = req.body.card.email;
   Card.update({
-    user: user,
+    loginUserEmail: loginUserEmail,
     "cardList.cardid": cardid
   }, {
     "cardList.$.key": key,
@@ -244,12 +247,12 @@ router.post('/editCard', function (req, res, next) {
   })
 })
 
-router.post('/addCart', function (req, res, next) {
-  let user = req.body.user;
+router.post('/addCard', function (req, res, next) {
+  let loginUserEmail = req.body.loginUserEmail;
   let card = req.body.card;
   card.key = getKey(card.userName);
   Card.findOne({
-    user: user
+    loginUserEmail: loginUserEmail
   }, (err, doc) => {
     if (err) {
       res.json({
@@ -262,7 +265,7 @@ router.post('/addCart', function (req, res, next) {
         let cardList = [];
         cardList.push(card);
         let newCard = new Card({
-          user: user,
+          loginUserEmail: loginUserEmail,
           cardList: cardList
         });
         newCard.save(err => {
@@ -282,7 +285,7 @@ router.post('/addCart', function (req, res, next) {
         })
       } else {
         Card.update({
-          user: user
+          loginUserEmail: loginUserEmail
         }, {
           $push: {
             cardList: card
