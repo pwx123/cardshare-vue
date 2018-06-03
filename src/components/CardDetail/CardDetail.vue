@@ -415,6 +415,7 @@ export default {
     left 0
     right 0
     bottom 0
+    z-index 40
     background rgba(238, 238, 238, 0.5)
     animation comein 0.5s
     display flex

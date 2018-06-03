@@ -3,18 +3,14 @@
     <div class="send">
       <div class="waiting">
         <img src="./waiting.gif" alt="">
-        <div>正在等待接收方加入...</div>
+        <div>好友输入以下数字或扫描二维码完成分享</div>
       </div>
-      <div class="reveiver-title">接收方列表</div>
-      <scroll class="receiver-list">
-        <div>
-          <ul v-for="(value,key) in receiverList">
-            <li>用户 : {{key}}
-              <span class="sendbtn" @click="sendTo(key)">发送</span>
-            </li>
-          </ul>
-        </div>
-      </scroll>
+      <div class="shareid">
+        {{shareId}}
+      </div>
+      <div class="qpcode">
+        二维码
+      </div>
       <div class="close" @click="close">取消</div>
       <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
     </div>
@@ -34,15 +30,17 @@ export default {
       msg: "",
       mdShow: false,
       position: {},
-      receiverList: {}
+      receiverList: {},
+      shareId: ""
     };
   },
   mounted() {
-    if (!this.$cookie.get("loginUserEmail")) {
+    if (!this.$cookie.get("loginUserEmail") || !this.card.userName) {
       this.$router.push({ path: "/CardList" });
       return;
     } else {
       this.user = this.$cookie.get("loginUserEmail");
+      this.shareId = this.getRandNum();
       this.startSend();
     }
   },
@@ -55,17 +53,16 @@ export default {
       this.$socket.open();
       this.$socket.emit("startSend", {
         user: this.user,
-        city: this.locity
-      });
-    },
-    sendTo(receiverName) {
-      this.$socket.emit("sendTo", {
-        senduser: this.user,
-        recuser: receiverName,
+        shareId: this.shareId,
         card: this.card
       });
-      this.msg = "发送完成";
-      this.mdShow = true;
+    },
+    getRandNum() {
+      let str = "";
+      for (let i = 0; i < 6; i++) {
+        str += parseInt(Math.random() * 10);
+      }
+      return str
     },
     close() {
       this.$router.push({ path: "/CardList" });
@@ -74,9 +71,6 @@ export default {
   sockets: {
     connect() {
       console.log("socket connected");
-    },
-    allReceiver(value) {
-      this.receiverList = value;
     },
     err(value) {
       console.log(value);
@@ -122,50 +116,25 @@ export default {
       display block
       margin 0 auto
 
-  .reveiver-title
-    text-align center
-    margin 0 auto
-    margin-top 10px
-    width 80%
+  .shareid
+    width 100px
     height 40px
-    line-height 40px
-    font-size 18px
-    border-radius 5px
-    background-color $color-theme
-    color #fff
-
-  .receiver-list
-    width 80%
-    height 200px
     margin 0 auto
-    margin-top 20px
-    padding 0px 20px
-    box-shadow 0 2px 4px 0 rgba(0, 0, 0, 0.2)
-    overflow hidden
+    border-bottom 1px solid #000
+    line-height 40px
+    margin-top 30px
+    text-align center
+    font-size 20px
+    color $color-theme
 
-    li
-      height 40px
-      line-height 40px
-      border-bottom 1px solid #999
-      padding 0 15px
-      color #333
-
-      .sendbtn
-        float right
-        display block
-        width 50px
-        height 30px
-        text-align center
-        line-height 30px
-        margin-top 5px
-        font-size 14px
-        background-color #35ce48
-        border-radius 5px
-        color #fff
-        transition all 0.5s
-
-        &:active
-          opacity 0.8
+  .qpcode
+    width 150px
+    height 150px
+    margin 0 auto
+    margin-top 40px
+    border 1px solid #000
+    text-align center
+    line-height 150px
 
   .close
     width 140px
@@ -173,7 +142,7 @@ export default {
     line-height 40px
     text-align center
     margin 0 auto
-    margin-top 20px
+    margin-top 30px
     color #fff
     background-color #ec4c5d
     border-radius 5px
