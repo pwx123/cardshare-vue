@@ -53,7 +53,7 @@ function padLeft(value) {
   }
 }
 
-function getFiveWord() {
+export function getFiveWord() {
   let str = ""
   for (let i = 0; i < 5; i++) {
     str += randomStr.charAt(Math.random() * randomStr.length)

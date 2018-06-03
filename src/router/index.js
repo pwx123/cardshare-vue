@@ -16,7 +16,8 @@ const Receive = () =>
   import ("@/components/Receive/Receive")
 const AddCard = () =>
   import ("@/components/AddCard/AddCard")
-
+const Search = () =>
+  import ("@/components/Search/Search")
 Vue.use(Router)
 
 export default new Router({
@@ -59,5 +60,9 @@ export default new Router({
     path: '/AddCard',
     name: 'AddCard',
     component: AddCard
+  }, {
+    path: '/Search',
+    name: 'Search',
+    component: Search
   }]
 })

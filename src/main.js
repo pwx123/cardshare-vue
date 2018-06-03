@@ -7,7 +7,6 @@ import router from './router'
 import store from './store'
 
 Vue.config.productionTip = false
-
 import './common/stylus/index.styl'
 
 var io = socketio('http://127.0.0.1:3000/', {

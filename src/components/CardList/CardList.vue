@@ -2,9 +2,9 @@
   <div class="cardlist">
     <div class="header">
       <span>名片夹</span>
-      <i class="icon iconfont icon-search"></i>
+      <i class="icon iconfont icon-search" @click="showSearch"></i>
     </div>
-    <listview :data="cardList" :loading="loading" @select="setDetailCard" v-show="loginUserEmail" class="list">
+    <listview :data="cardList" :loading="loading" @select="setDetailCard" v-show="loginUserEmail" class="list" ref="listview">
     </listview>
     <router-link class="loginbtn" v-show="!loginUserEmail" to="/Login">立刻登陆</router-link>
     <router-link class="addbtn" v-show="!cardList.length&&loginUserEmail" to="/AddCard">添加第一张名片</router-link>
@@ -26,13 +26,16 @@ export default {
     return {
       cardList: [],
       loginUserEmail: "",
-      loading: true
+      loading: true,
+      user: {},
+      issearch: false
     };
   },
   mounted() {
     if (this.$cookie.get("loginUserEmail")) {
       this.loginUserEmail = this.$cookie.get("loginUserEmail");
       this._getCardList();
+      this._getUserMsg();
     }
   },
   methods: {
@@ -52,6 +55,17 @@ export default {
             this.loading = false;
           }
         });
+    },
+    _getUserMsg() {
+      axios.post("/users/getUserMsg").then(res => {
+        if (res.data.status == 0) {
+          if (res.data.result) {
+            this.user = res.data.result;
+          }
+        } else {
+          console.log(res.data);
+        }
+      });
     },
     _sortCardList(list) {
       let map = {};
@@ -89,6 +103,12 @@ export default {
         }
       });
     },
+    showSearch() {
+      this.$router.push({
+        path: "/Search",
+        query: { cardList: this.cardList }
+      });
+    },
     ...mapMutations({
       setCard: "SET_CARD_MUTATION",
       setReFresh: "SET_REFRESH_MUTATION"
@@ -107,6 +127,15 @@ export default {
     this.setReFresh(false);
     next();
   },
+  beforeRouteEnter(to, from, next) {
+    //解决手机键盘弹起better-sroll失效的问题
+    if (from.path == "/Search" || from.path == "/CardDetail") {
+      next(vm => {
+        vm.$refs.listview.refresh();
+      });
+    }
+    next();
+  },
   components: {
     scroll,
     loading,
@@ -120,20 +149,14 @@ export default {
 @import '~common/stylus/variable'
 
 .cardlist
-  position fixed
   width 100%
-  bottom 51px
-  top 0
-  // 必须设置z-index大于tab 不然子元素会被tab覆盖
-  z-index 20
-  margin-bottom 45px
 
   .header
     background-color $color-theme
     width 100%
     height 44px
     line-height 44px
-    padding-left 10px
+    padding-left 15px
     color #fff
     font-size 18px
     border-bottom 1px solid #fff
@@ -143,6 +166,13 @@ export default {
       font-weight bold
       position absolute
       right 30px
+
+  .list
+    position fixed
+    top 45px
+    bottom 51px
+    left 0
+    right 0
 
   .loginbtn
     position absolute
@@ -177,6 +207,6 @@ export default {
   .btn
     position absolute
     right 20px
-    bottom 0px
+    bottom 80px
 </style>
 

@@ -22,7 +22,11 @@ router.post('/login', function (req, res, next) {
       if (doc) {
         res.cookie("loginUserEmail", doc.loginUserEmail, {
           path: "/",
-          maxAge: 1000 * 60 * 60
+          maxAge: 1000 * 60 * 60 * 365
+        });
+        res.cookie("newEventId", doc.newEventId, {
+          path: "/",
+          maxAge: 1000 * 60 * 60 * 365
         });
         res.json({
           status: "0",
@@ -153,6 +157,38 @@ router.post('/reg', function (req, res, next) {
             });
           }
         })
+      }
+    }
+  })
+})
+
+router.post('/getUserMsg', function (req, res, next) {
+  let loginUserEmail = decodeURI(req.cookies.loginUserEmail);
+  let param = {
+    loginUserEmail: loginUserEmail
+  };
+  User.findOne(param, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "100",
+        msg: "数据库访问失败!",
+        result: ""
+      });
+    } else {
+      if (doc) {
+        res.json({
+          status: "0",
+          msg: "成功",
+          result: {
+            user: doc
+          }
+        });
+      } else {
+        res.json({
+          status: "002",
+          msg: "失败",
+          result: ""
+        });
       }
     }
   })

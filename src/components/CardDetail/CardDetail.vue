@@ -1,5 +1,5 @@
 <template>
-  <transition :name="slide">
+  <transition name="slide">
     <div class="carddetail">
       <div class="header" ref="header" :style="{backgroundColor:color}">
         <div class="picname" ref="picname">
@@ -35,7 +35,7 @@
             <span class="delete" @click="removeOrsave">{{isEdit?'保存':'删除'}}</span>
           </li>
           <li class="li-btn">
-            <spank class="share" @click="share">分享</spank>
+            <span class="share" @click="share">分享</span>
           </li>
         </ul>
       </scroll>

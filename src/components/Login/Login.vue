@@ -4,6 +4,10 @@
       <h1>CardShare Login</h1>
       <input type="text" class="user" placeholder="邮箱" v-model="loginUserEmail"><br/>
       <input type="password" class="password" placeholder="密码" v-model="userPwd"><br/>
+      <div v-show="identifyShow">
+        <input type="text" class="identify" placeholder="验证码" v-model="identify">
+        <span class="identify-span" @click="getNewIdentify">{{identifyCreate}}</span>
+      </div>
       <div class="logbtn" @click="login">登陆</div>
       <div class="line">
         <span></span>
@@ -20,7 +24,7 @@
 import modal from "base/modal/modal";
 import axios from "axios";
 import MD5 from "crypto-js/md5";
-import { emailCheck, pwdCheck } from "common/js/util";
+import { emailCheck, pwdCheck, getFiveWord } from "common/js/util";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
@@ -28,7 +32,11 @@ export default {
       loginUserEmail: "",
       userPwd: "",
       msg: "",
-      mdShow: false
+      mdShow: false,
+      errCount: 0,
+      identifyShow: false,
+      identify: "",
+      identifyCreate: "3213"
     };
   },
   methods: {
@@ -39,6 +47,15 @@ export default {
         this.loginUserEmail = "";
         this.userPwd = "";
       } else {
+        if (this.identifyShow) {
+          if (
+            this.identify.toLowerCase() != this.identifyCreate.toLowerCase()
+          ) {
+            this.msg = "验证码错误";
+            this.mdShow = true;
+            return;
+          }
+        }
         axios
           .post("/users/login", {
             loginUserEmail: this.loginUserEmail,
@@ -49,11 +66,19 @@ export default {
               this.setReFresh(true);
               this.$router.push("/CardList");
             } else {
+              this.errCount++;
+              if (this.errCount >= 3) {
+                this.identifyShow = true;
+                this.identifyCreate = getFiveWord();
+              }
               this.msg = res.data.msg;
               this.mdShow = true;
             }
           });
       }
+    },
+    getNewIdentify() {
+      this.identifyCreate = getFiveWord();
     },
     closeMd() {
       this.mdShow = false;
@@ -114,6 +139,27 @@ export default {
 
     &:focus
       border-color #20a0ff
+
+  .identify
+    width 30%
+    height 40px
+    font-size 16px
+    margin-top 20px
+    padding-left 20px
+    border-radius 8px
+    box-sizing border-box
+    outline 0
+    border 1px solid #bfcbd9
+    transition 0.5s border-color
+    appearance none
+
+    &:focus
+      border-color #20a0ff
+
+  .identify-span
+    display inline-block
+    width 30%
+    font-size 20px
 
   .logbtn, .regbtn
     width 140px

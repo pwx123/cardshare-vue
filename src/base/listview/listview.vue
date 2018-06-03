@@ -1,5 +1,5 @@
 <template>
-  <scroll @scroll="scroll" :listen-scroll="listenScroll" :probe-type="probetype" :loading="loading" :data="data" class="listview" ref="listview">
+  <scroll @scroll="scroll" :listen-scroll="listenScroll" :probe-type="probetype" :data="data" class="listview" ref="listview">
     <ul>
       <li v-for="cardgroup in data" ref="cardGroup">
         <p class="grouptitle">{{cardgroup.title}}</p>
@@ -122,6 +122,9 @@ export default {
         height += item.clientHeight;
         this.listHeight.push(height);
       }
+    },
+    refresh() {
+      this.$refs.listview.refresh();
     }
   },
   computed: {
@@ -184,7 +187,6 @@ export default {
 
 .listview
   width 100%
-  height 100%
   overflow hidden
   position relative
 
