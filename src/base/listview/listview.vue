@@ -13,7 +13,7 @@
         </ul>
       </li>
     </ul>
-    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
+    <div slot="list-shortcut" class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
         <li v-for="(item,index) in shortcutList" class="item" :data-index="index" :class="{active:currentIndex === index}">
           {{item}}
@@ -188,7 +188,6 @@ export default {
 .listview
   width 100%
   overflow hidden
-  position relative
 
   .grouptitle
     width 100%
@@ -228,7 +227,7 @@ export default {
       color #333
 
   .list-shortcut
-    position absolute
+    position fixed
     right 0
     top 50%
     transform translateY(-50%)

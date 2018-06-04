@@ -7,6 +7,9 @@ const mutations = {
   },
   [types.SET_REFRESH_MUTATION](state, payload) {
     state.refresh = payload
+  },
+  [types.SET_CARDLIST_MUTATION](state, payload) {
+    state.cardList = payload
   }
 }
 

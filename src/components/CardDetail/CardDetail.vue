@@ -19,14 +19,18 @@
           <li>
             <span>电话</span>
             <span class="value" v-show="!isEdit">
-              <a :href="'tel:'+card.phoneNum">{{card.phoneNum}}</a>
+              <a :href="'tel:'+card.phoneNum">{{card.phoneNum}}
+                <i class="icon iconfont icon-jisuanqi"></i>
+              </a>
             </span>
             <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.phoneNum">
           </li>
           <li>
             <span>邮箱</span>
             <span class="value" v-show="!isEdit">
-              <a :href="'mailto:'+card.email">{{card.email}}</a>
+              <a :href="'mailto:'+card.email">{{card.email}}
+                <i class="icon iconfont icon-youjianduanxin"></i>
+              </a>
             </span>
             <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.email">
           </li>
@@ -310,6 +314,12 @@ export default {
 
         .value
           margin-left 40px
+
+          i
+            color #666
+            float right
+            margin-right 20px
+            font-size 20px
 
         .edit-input
           width 160px

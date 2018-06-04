@@ -36,12 +36,12 @@
 
 <script>
 import scroll from "base/scroll/scroll";
+import { mapGetters } from "vuex";
 
 import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-      dataList: this.$route.query.cardList,
       searchList: [],
       search: "",
       timeOut: undefined,
@@ -167,6 +167,9 @@ export default {
       setCard: "SET_CARD_MUTATION"
     })
   },
+  computed: {
+    ...mapGetters({ dataList: "cardList" })
+  },
   components: {
     scroll
   }
@@ -195,7 +198,6 @@ export default {
     .cancel
       background-color #ec4c5d
       margin 0 auto
-      border 1px solid #333
       border-radius 5px
       width 35%
       font-size 18px

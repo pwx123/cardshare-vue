@@ -4,6 +4,8 @@ const CardList = () =>
   import ("@/components/CardList/CardList")
 const Account = () =>
   import ("@/components/Account/Account")
+const Event = () =>
+  import ("@/components/Event/Event")
 const CardDetail = () =>
   import ("@/components/CardDetail/CardDetail")
 const Login = () =>
@@ -23,11 +25,11 @@ Vue.use(Router)
 export default new Router({
   routes: [{
     path: '/',
-    name: 'CardList',
+    name: '',
     redirect: '/CardList'
   }, {
     path: '/CardList',
-    name: CardList,
+    name: 'CardList',
     component: CardList,
     meta: {
       keepAlive: true
@@ -44,6 +46,10 @@ export default new Router({
     path: '/Account',
     name: 'Account',
     component: Account
+  }, {
+    path: '/Event',
+    name: 'Event',
+    component: Event
   }, {
     path: '/Login',
     name: 'Login',

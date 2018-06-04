@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <keep-alive>
-      <router-view v-if="$route.meta.keepAlive" key="list"></router-view>
+    <keep-alive include="CardList,Event">
+      <router-view></router-view>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive" key="other">
-    </router-view>
     <tab></tab>
   </div>
 </template>

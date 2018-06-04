@@ -9,7 +9,7 @@ import store from './store'
 Vue.config.productionTip = false
 import './common/stylus/index.styl'
 
-var io = socketio('http://127.0.0.1:3000/', {
+var io = socketio('http://192.168.0.106:3000/', {
   autoConnect: false
 })
 Vue.use(VueSocketio, io)

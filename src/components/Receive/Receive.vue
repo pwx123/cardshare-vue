@@ -155,6 +155,7 @@ export default {
       box-sizing border-box
       outline 0
       border 1px solid #bfcbd9
+      padding 0 15px
       transition 0.5s border-color
       appearance none
 
@@ -163,7 +164,6 @@ export default {
 
     .btn
       display inline-block
-      border 1px solid #333
       color #fff
       width 80px
       border-radius 5px
@@ -178,7 +178,6 @@ export default {
     height 40px
     line-height 40px
     margin 0 auto
-    border 1px solid #333
     text-align center
     border-radius 5px
     color #fff
@@ -206,6 +205,7 @@ export default {
     top 50%
     left 50%
     width 80%
+    height 240px
     transform translate(-50%, -50%)
     background-color #fff
     border-radius 6px
@@ -252,7 +252,6 @@ export default {
 
 @keyframes comein
   from
-    bottom 0px
     opacity 0.3
 
   to

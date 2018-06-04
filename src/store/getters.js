@@ -4,6 +4,9 @@ const getters = {
   },
   refresh: (state) => {
     return state.refresh
+  },
+  cardList: (state) => {
+    return state.cardList
   }
 }
 

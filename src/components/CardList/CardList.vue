@@ -22,6 +22,7 @@ import axios from "axios";
 import { mapMutations } from "vuex";
 import { mapGetters } from "vuex";
 export default {
+  name: "CardList",
   data() {
     return {
       cardList: [],
@@ -48,6 +49,7 @@ export default {
           if (res.data.status == 0) {
             if (res.data.result) {
               this.cardList = this._sortCardList(res.data.result);
+              this.setCardList(this.cardList);
             }
             this.loading = false;
           } else {
@@ -105,13 +107,13 @@ export default {
     },
     showSearch() {
       this.$router.push({
-        path: "/Search",
-        query: { cardList: this.cardList }
+        path: "/Search"
       });
     },
     ...mapMutations({
       setCard: "SET_CARD_MUTATION",
-      setReFresh: "SET_REFRESH_MUTATION"
+      setReFresh: "SET_REFRESH_MUTATION",
+      setCardList: "SET_CARDLIST_MUTATION"
     })
   },
   computed: {
@@ -129,12 +131,9 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     //解决手机键盘弹起better-sroll失效的问题
-    if (from.path == "/Search" || from.path == "/CardDetail") {
-      next(vm => {
-        vm.$refs.listview.refresh();
-      });
-    }
-    next();
+    next(vm => {
+      vm.$refs.listview.refresh();
+    });
   },
   components: {
     scroll,
@@ -159,7 +158,7 @@ export default {
     padding-left 15px
     color #fff
     font-size 18px
-    border-bottom 1px solid #fff
+    border-bottom 1px solid #eee
     position relative
 
     i

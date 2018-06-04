@@ -5,7 +5,10 @@ let eventSchema = new Schema({
   "newEventId": String,
   "eventList": [{
     "phoneNum": String,
-    "event": String
+    "event": {
+      "title": String,
+      "detail": String
+    }
   }]
 })
 

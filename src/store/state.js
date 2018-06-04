@@ -6,7 +6,8 @@ const state = {
     "userName": "",
     "phoneNum": ""
   },
-  refresh: false
+  refresh: false,
+  cardList: []
 }
 
 export default state

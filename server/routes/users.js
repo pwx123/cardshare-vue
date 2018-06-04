@@ -345,4 +345,88 @@ router.post('/addCard', function (req, res, next) {
     }
   })
 })
+
+router.post('/hasNewEvent', function (req, res, next) {})
+router.post('/getEventList', function (req, res, next) {
+  let loginUserEmail = req.body.loginUserEmail;
+  getEventListStart(loginUserEmail)
+    .then(result => {
+      res.cookie("newEventId", result.newEventId, {
+        path: "/",
+        maxAge: 1000 * 60 * 60 * 365
+      });
+      res.json({
+        status: "0",
+        msg: "成功",
+        result: result.userEventList
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      res.json(error);
+    })
+})
+
+function getEventList() {
+  return new Promise((resolve, reject) => {
+    Event.findOne({}, (err, doc) => {
+      if (err) {
+        reject({
+          status: "100",
+          msg: "数据库访问失败!",
+          result: ""
+        })
+      } else {
+        resolve(doc);
+      }
+    })
+  })
+}
+
+function getCard(loginUserEmail) {
+  return new Promise((resolve, reject) => {
+    Card.findOne({
+      loginUserEmail: loginUserEmail
+    }, (err, doc) => {
+      if (err) {
+        reject({
+          status: "100",
+          msg: "数据库访问失败!",
+          result: ""
+        });
+      } else {
+        if (!doc) {
+          reject({
+            status: '200',
+            msg: "无此用户",
+            result: ""
+          })
+        } else {
+          resolve(doc);
+        }
+      }
+    })
+  })
+}
+async function getEventListStart(loginUserEmail) {
+  let event = await getEventList();
+  let eventList = event.eventList;
+  let newEventId = event.newEventId;
+  let user = await getCard(loginUserEmail);
+  let cardList = user.cardList;
+  var userEventList = [];
+  for (let i = 0; i < cardList.length; i++) {
+    let phoneNum = cardList[i].phoneNum;
+    for (let j = 0; j < eventList.length; j++) {
+      if (eventList[j].phoneNum === phoneNum) {
+        userEventList.push(eventList[j]);
+      }
+    }
+  }
+  let result = {
+    userEventList: userEventList,
+    newEventId: newEventId
+  }
+  return result;
+}
 module.exports = router;
