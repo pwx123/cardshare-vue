@@ -56,7 +56,6 @@ export default {
       }
       let data = new Date();
       this.event.time = data.toJSON();
-      console.log(this.event);
       axios
         .post("/users/addEvent", {
           phoneNum: this.userMsg.phoneNum,

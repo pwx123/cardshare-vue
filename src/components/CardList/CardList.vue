@@ -35,14 +35,12 @@ export default {
   },
   mounted() {
     if (this.$cookie.get("loginUserEmail")) {
-      this.loginUserEmail = this.$cookie.get("loginUserEmail");
-      this.userMsg = JSON.parse(localStorage.getItem("userMsg"));
       this._getCardList();
-      this._getUserMsg();
     }
   },
   methods: {
-    _getCardList() {
+    async _getCardList() {
+      await this._getUserMsg();
       axios
         .post("/users/getCardList", {
           loginUserEmail: this.$cookie.get("loginUserEmail")
@@ -51,14 +49,13 @@ export default {
           if (res.data.status == 0) {
             if (res.data.result) {
               this.cardList = this._sortCardList(res.data.result);
-              console.log(this.cardList);
               this.cardList.unshift({
                 items: [
                   {
                     cardid: "self",
-                    email: this.userMsg.loginUserEmail,
-                    phoneNum: this.userMsg.phoneNum,
-                    userName: this.userMsg.userName
+                    email: this.user.loginUserEmail,
+                    phoneNum: this.user.phoneNum,
+                    userName: this.user.userName
                   }
                 ],
                 title: "我"
