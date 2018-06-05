@@ -167,7 +167,10 @@ router.post('/getUserMsg', function (req, res, next) {
   let param = {
     loginUserEmail: loginUserEmail
   };
-  User.findOne(param, (err, doc) => {
+  User.findOne(param, {
+    userPwd: 0,
+    _id: 0
+  }, (err, doc) => {
     if (err) {
       res.json({
         status: "100",
@@ -193,7 +196,33 @@ router.post('/getUserMsg', function (req, res, next) {
     }
   })
 })
-
+router.post('/editUserMsg', function (req, res, next) {
+  let loginUserEmail = req.body.loginUserEmail;
+  let phoneNum = req.body.phoneNum;
+  let userName = req.body.userName;
+  User.update({
+    loginUserEmail: loginUserEmail
+  }, {
+    phoneNum: phoneNum,
+    userName: userName
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "100",
+        msg: "数据库访问失败!",
+        result: ""
+      });
+    } else {
+      res.json({
+        status: "0",
+        msg: "修改成功",
+        result: {
+          loginUserEmail: loginUserEmail
+        }
+      });
+    }
+  })
+})
 router.post('/getCardList', function (req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   Card.findOne({
@@ -351,6 +380,7 @@ router.post('/getEventList', function (req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   getEventListStart(loginUserEmail)
     .then(result => {
+      //还需要设置数据库user newEventId
       res.cookie("newEventId", result.newEventId, {
         path: "/",
         maxAge: 1000 * 60 * 60 * 365
@@ -365,6 +395,31 @@ router.post('/getEventList', function (req, res, next) {
       console.log(error);
       res.json(error);
     })
+})
+router.post('/addEvent', function (req, res, next) {
+  let item = {
+    phoneNum: req.body.phoneNum,
+    event: req.body.event
+  }
+  Event.update({}, {
+    $push: {
+      eventList: item
+    }
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "100",
+        msg: "数据库访问失败",
+        result: ""
+      });
+    } else {
+      res.json({
+        status: "0",
+        msg: "添加成功",
+        result: "success"
+      });
+    }
+  })
 })
 
 function getEventList() {

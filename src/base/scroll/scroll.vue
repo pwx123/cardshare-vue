@@ -80,13 +80,11 @@ export default {
             } else {
               this.tipShow = true;
               if (pos.y > 50) {
-                console.log(this.$refs.tips);
                 this.$refs.tips.style.transform = `rotate(${180}deg)`;
                 this.pullDownRefreshTip = {
                   text: "松开刷新"
                 };
               } else {
-                console.log(this.$refs.tips);
                 this.$refs.tips.style.transform = `rotate(${pos.y*(180/50)}deg)`;
                 this.pullDownRefreshTip = {
                   text: "下拉刷新"

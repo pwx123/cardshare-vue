@@ -192,7 +192,7 @@ export default {
     height 36px
     line-height 36px
     text-align center
-    bottom 10px
+    bottom 20px
     width 100%
 
     .cancel
@@ -229,7 +229,7 @@ export default {
     top 50px
     left 0
     right 0
-    bottom 60px
+    bottom 70px
     width 100%
     overflow hidden
 

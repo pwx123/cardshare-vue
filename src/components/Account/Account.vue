@@ -29,7 +29,7 @@ export default {
       if (!this.isshow) {
         this.$router.push({ path: "/Login" });
       } else {
-        console.log(this.name);
+        this.$router.push({ path: "/UserMsg" });
       }
     },
     quit() {

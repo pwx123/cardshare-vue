@@ -62,7 +62,9 @@ export default {
       axios.post("/users/getUserMsg").then(res => {
         if (res.data.status == 0) {
           if (res.data.result) {
-            this.user = res.data.result;
+            this.user = res.data.result.user;
+            this.setUserMsg(res.data.result.user);
+            console.log(this.user);
           }
         } else {
           console.log(res.data);
@@ -113,7 +115,8 @@ export default {
     ...mapMutations({
       setCard: "SET_CARD_MUTATION",
       setReFresh: "SET_REFRESH_MUTATION",
-      setCardList: "SET_CARDLIST_MUTATION"
+      setCardList: "SET_CARDLIST_MUTATION",
+      setUserMsg: "SET_USERMSG_MUTATION"
     })
   },
   computed: {

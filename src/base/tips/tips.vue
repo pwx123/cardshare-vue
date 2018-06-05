@@ -23,16 +23,13 @@ export default {
       color: {
         primary: "#409EFF",
         danger: "#ff3333",
-        warn: "#ff3333"
+        warn: "#ecc843"
       }
     };
   },
-  mounted() {
-    this._setColor();
-  },
-  methods: {
-    _setColor() {
-      let msgColor = this.color[this.type];
+  watch: {
+    type(newVal) {
+      let msgColor = this.color[newVal];
       if (!msgColor) {
         msgColor = "#409EFF";
       }

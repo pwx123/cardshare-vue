@@ -7,6 +7,9 @@ const getters = {
   },
   cardList: (state) => {
     return state.cardList
+  },
+  userMsg: (state) => {
+    return state.userMsg
   }
 }
 

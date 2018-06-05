@@ -6,6 +6,7 @@ let eventSchema = new Schema({
   "eventList": [{
     "phoneNum": String,
     "event": {
+      "time": String,
       "title": String,
       "detail": String
     }

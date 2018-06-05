@@ -7,7 +7,13 @@ const state = {
     "phoneNum": ""
   },
   refresh: false,
-  cardList: []
+  cardList: [],
+  userMsg: {
+    "loginUserEmail": "",
+    "newEventId": "",
+    "phoneNum": "",
+    "userName": ""
+  }
 }
 
 export default state

@@ -5,7 +5,8 @@ let userSchema = new Schema({
   "loginUserEmail": String,
   "userPwd": String,
   "userName": String,
-  "newEventId": String
+  "newEventId": String,
+  "phoneNum": String
 })
 
 module.exports = mongoose.model('User', userSchema);

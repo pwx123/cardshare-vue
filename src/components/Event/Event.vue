@@ -2,17 +2,19 @@
   <div class="event">
     <div class="header">
       <span>发现</span>
-      <i class="icon iconfont icon-add"></i>
+      <i class="icon iconfont icon-add" @click="addEvent"></i>
     </div>
     <scroll @pulldown="pulldown" :data="eventList" :pullDownRefresh="pullDownRefresh" :probe-type="probetype" :listenScroll="listenScroll" class="eventList" ref="eventList">
-      <ul>
+      <ul class="events" ref="events">
         <li v-for="(item,index) in eventList" class="eventItem">
           <div class="item">
             <a :href="'tel:'+item.phoneNum" class="phoneNum">
               <span>
                 <i class="icon iconfont icon-jisuanqi"></i>
               </span>
-              {{item.phoneNum}}</a>
+              <span>{{item.phoneNum}}</span>
+              <span class="time">{{getTime(item.event.time)}}</span>
+            </a>
             <div class="title">{{item.event.title}}</div>
             <div class="detail">
               <p>
@@ -24,6 +26,7 @@
       </ul>
     </scroll>
     <tips class="tips" :msg="msg" :type="type" v-show="tipsShow"></tips>
+    <modal :msg="modalmsg" :mdShow="mdShow" @closeMd="closeMd"></modal>
   </div>
 </template>
 
@@ -31,6 +34,9 @@
 import scroll from "base/scroll/scroll";
 import tips from "base/tips/tips";
 import { mapGetters } from "vuex";
+import { timeFormat } from "common/js/util";
+
+import modal from "base/modal/modal";
 
 import axios from "axios";
 export default {
@@ -43,24 +49,35 @@ export default {
       eventList: [],
       msg: "",
       type: "primary",
-      tipsShow: false
+      tipsShow: false,
+      modalmsg: "",
+      mdShow: false
     };
   },
   mounted() {
     setTimeout(() => {
       this.getEventList();
+      let height = this.$refs.eventList.$el.offsetHeight;
+      this.$refs.events.style.minHeight = height - 25 + "px";
     }, 20);
   },
   activated() {
-    this.loginUserEmail = this.$cookie.get("loginUserEmail");
     if (this.refresh) {
       this.getEventList();
     }
   },
   computed: {
-    ...mapGetters(["refresh"])
+    ...mapGetters(["refresh", "userMsg"])
   },
   methods: {
+    addEvent() {
+      if (!this.userMsg.phoneNum || !this.userMsg.userName) {
+        this.modalmsg = "要添加事件，请先完善信息";
+        this.mdShow = true;
+      } else {
+        this.$router.push({ path: "/AddEvent" });
+      }
+    },
     getEventList() {
       axios
         .post("/users/getEventList", {
@@ -69,13 +86,22 @@ export default {
         .then(res => {
           if (res.data.status == 0) {
             if (res.data.result) {
-              console.log(res.data.result);
-              this.eventList = res.data.result;
+              this._sortEventList(res.data.result);
             }
           } else {
             console.log(res.data);
           }
         });
+    },
+    _sortEventList(eventList) {
+      let list = eventList.sort((a, b) => {
+        if (new Date(a.event.time) > new Date(b.event.time)) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+      this.eventList = list;
     },
     pulldown() {
       axios
@@ -85,7 +111,7 @@ export default {
         .then(res => {
           if (res.data.status == 0) {
             if (res.data.result) {
-              console.log(res.data.result);
+              this._sortEventList(res.data.result);
               this.type = "primary";
               this.msg = "刷新成功";
             }
@@ -101,6 +127,13 @@ export default {
             this.tipsShow = false;
           }, 3000);
         });
+    },
+    closeMd() {
+      this.mdShow = false;
+      this.$router.push({ path: "/UserMsg" });
+    },
+    getTime(time) {
+      return timeFormat(time);
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -111,7 +144,8 @@ export default {
   },
   components: {
     scroll,
-    tips
+    tips,
+    modal
   }
 };
 </script>
@@ -162,6 +196,12 @@ export default {
 
         .phoneNum
           margin-left 10px
+
+          .time
+            color #777777
+            font-size 12px
+            float right
+            margin-right 16px
 
         .title
           margin 10px 10px 5px 10px

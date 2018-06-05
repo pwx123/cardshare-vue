@@ -60,3 +60,13 @@ export function getFiveWord() {
   }
   return str;
 }
+
+export function timeFormat(time) {
+  let date = new Date(time);
+  let month = date.getMonth() + 1;
+  let day = date.getDay();
+  let hour = date.getHours();
+  let minutes = date.getMinutes();
+  let str = `${month}-${day} ${hour}:${minutes}`
+  return str;
+}

@@ -20,6 +20,10 @@ const AddCard = () =>
   import ("@/components/AddCard/AddCard")
 const Search = () =>
   import ("@/components/Search/Search")
+const UserMsg = () =>
+  import ("@/components/UserMsg/UserMsg")
+const AddEvent = () =>
+  import ("@/components/AddEvent/AddEvent")
 Vue.use(Router)
 
 export default new Router({
@@ -70,5 +74,13 @@ export default new Router({
     path: '/Search',
     name: 'Search',
     component: Search
+  }, {
+    path: '/UserMsg',
+    name: 'UserMsg',
+    component: UserMsg
+  }, {
+    path: '/AddEvent',
+    name: 'AddEvent',
+    component: AddEvent
   }]
 })
