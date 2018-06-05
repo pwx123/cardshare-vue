@@ -29,12 +29,14 @@ export default {
       loginUserEmail: "",
       loading: true,
       user: {},
-      issearch: false
+      issearch: false,
+      userMsg: ""
     };
   },
   mounted() {
     if (this.$cookie.get("loginUserEmail")) {
       this.loginUserEmail = this.$cookie.get("loginUserEmail");
+      this.userMsg = JSON.parse(localStorage.getItem("userMsg"));
       this._getCardList();
       this._getUserMsg();
     }
@@ -49,6 +51,18 @@ export default {
           if (res.data.status == 0) {
             if (res.data.result) {
               this.cardList = this._sortCardList(res.data.result);
+              console.log(this.cardList);
+              this.cardList.unshift({
+                items: [
+                  {
+                    cardid: "self",
+                    email: this.userMsg.loginUserEmail,
+                    phoneNum: this.userMsg.phoneNum,
+                    userName: this.userMsg.userName
+                  }
+                ],
+                title: "我"
+              });
               this.setCardList(this.cardList);
             }
             this.loading = false;
@@ -63,8 +77,10 @@ export default {
         if (res.data.status == 0) {
           if (res.data.result) {
             this.user = res.data.result.user;
-            this.setUserMsg(res.data.result.user);
-            console.log(this.user);
+            localStorage.setItem(
+              "userMsg",
+              JSON.stringify(res.data.result.user)
+            );
           }
         } else {
           console.log(res.data);
@@ -115,8 +131,7 @@ export default {
     ...mapMutations({
       setCard: "SET_CARD_MUTATION",
       setReFresh: "SET_REFRESH_MUTATION",
-      setCardList: "SET_CARDLIST_MUTATION",
-      setUserMsg: "SET_USERMSG_MUTATION"
+      setCardList: "SET_CARDLIST_MUTATION"
     })
   },
   computed: {

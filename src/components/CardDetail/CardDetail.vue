@@ -34,7 +34,7 @@
             </span>
             <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.email">
           </li>
-          <li class="li-btn">
+          <li class="li-btn" v-show="card.cardid=='self'?false:true">
             <span class="edit" @click="editOrcancel">{{isEdit?'取消':'编辑'}}</span>
             <span class="delete" @click="removeOrsave">{{isEdit?'保存':'删除'}}</span>
           </li>

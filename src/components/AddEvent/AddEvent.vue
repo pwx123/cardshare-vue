@@ -24,7 +24,7 @@
 
 <script>
 import axios from "axios";
-import { mapGetters, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 import { stringCheck } from "common/js/util";
 import modal from "base/modal/modal";
 export default {
@@ -37,10 +37,13 @@ export default {
       },
       isEdit: false,
       msg: "",
-      mdShow: false
+      mdShow: false,
+      userMsg: ""
     };
   },
-  mounted() {},
+  mounted() {
+    this.userMsg = JSON.parse(localStorage.getItem("userMsg"));
+  },
   methods: {
     cancel() {
       this.$router.go(-1);
@@ -77,9 +80,6 @@ export default {
     ...mapMutations({
       setReFresh: "SET_REFRESH_MUTATION"
     })
-  },
-  computed: {
-    ...mapGetters(["userMsg"])
   },
   components: {
     modal

@@ -31,7 +31,6 @@
 
 <script>
 import axios from "axios";
-import { mapGetters, mapMutations } from "vuex";
 import { phoneNumCheck, stringCheck } from "common/js/util";
 import modal from "base/modal/modal";
 export default {
@@ -45,7 +44,7 @@ export default {
     };
   },
   mounted() {
-    this.user = this.userMsg;
+    this.user = JSON.parse(localStorage.getItem("userMsg"));
     this.edituser = Object.assign({}, this.user);
     if (!this.user.loginUserEmail) {
       this.back();
@@ -60,7 +59,6 @@ export default {
       }
     },
     removeOrsave() {
-      console.log(this.edituser);
       if (!stringCheck(this.edituser.userName)) {
         this.msg = "姓名不能为空";
         this.mdShow = true;
@@ -81,7 +79,7 @@ export default {
           if (res.data.status == 0) {
             this.isEdit = false;
             this.user = this.edituser;
-            this.setUserMsg(this.edituser);
+            localStorage.setItem("userMsg", JSON.stringify(this.edituser));
           } else {
             console.log(res.data);
           }
@@ -92,13 +90,7 @@ export default {
     },
     back() {
       this.$router.go(-1);
-    },
-    ...mapMutations({
-      setUserMsg: "SET_USERMSG_MUTATION"
-    })
-  },
-  computed: {
-    ...mapGetters(["userMsg"])
+    }
   },
   components: {
     modal

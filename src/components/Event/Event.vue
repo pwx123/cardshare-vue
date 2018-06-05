@@ -51,10 +51,12 @@ export default {
       type: "primary",
       tipsShow: false,
       modalmsg: "",
-      mdShow: false
+      mdShow: false,
+      userMsg: ""
     };
   },
   mounted() {
+    this.userMsg = JSON.parse(localStorage.getItem("userMsg"));
     setTimeout(() => {
       this.getEventList();
       let height = this.$refs.eventList.$el.offsetHeight;
@@ -67,7 +69,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["refresh", "userMsg"])
+    ...mapGetters(["refresh"])
   },
   methods: {
     addEvent() {

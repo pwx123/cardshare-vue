@@ -469,9 +469,15 @@ async function getEventListStart(loginUserEmail) {
   let newEventId = event.newEventId;
   let user = await getCard(loginUserEmail);
   let cardList = user.cardList;
-  var userEventList = [];
+  let temp = [];
+  let cardListNum = [];
+  let userEventList = [];
   for (let i = 0; i < cardList.length; i++) {
-    let phoneNum = cardList[i].phoneNum;
+    temp.push(cardList[i].phoneNum);
+  }
+  cardListNum = Array.from(new Set([...temp]));
+  for (let i = 0; i < cardListNum.length; i++) {
+    let phoneNum = cardListNum[i];
     for (let j = 0; j < eventList.length; j++) {
       if (eventList[j].phoneNum === phoneNum) {
         userEventList.push(eventList[j]);
