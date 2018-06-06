@@ -2,100 +2,130 @@
   <transition name="slide">
     <div class="usermsg">
       <div class="header">
-        <i class="icon iconfont icon-back" @click="back"></i>
+        <i
+          class="icon iconfont icon-back"
+          @click="back"
+        />
         <span>个人信息</span>
       </div>
       <div class="list setting first">
         <span class="item">姓名</span>
-        <span v-show="!isEdit">{{user.userName?user.userName:"空"}}</span>
-        <input type="text" v-show="isEdit" class="edit-input" v-model="edituser.userName">
+        <span v-show="!isEdit">{{ user.userName?user.userName:"空" }}</span>
+        <input
+          v-show="isEdit"
+          v-model="edituser.userName"
+          type="text"
+          class="edit-input"
+        >
       </div>
       <div class="list quit">
         <span class="item">邮箱</span>
-        <span v-show="!isEdit">{{user.loginUserEmail}}</span>
-        <input type="text" v-show="isEdit" class="edit-input" disabled v-model="edituser.loginUserEmail">
+        <span v-show="!isEdit">{{ user.loginUserEmail }}</span>
+        <input
+          v-show="isEdit"
+          v-model="edituser.loginUserEmail"
+          type="text"
+          class="edit-input"
+          disabled
+        >
       </div>
       <div class="list about">
         <span class="item">电话</span>
-        <span v-show="!isEdit">{{user.phoneNum?user.phoneNum:"空"}}</span>
-        <input type="text" v-show="isEdit" class="edit-input" v-model="edituser.phoneNum">
+        <span v-show="!isEdit">{{ user.phoneNum?user.phoneNum:"空" }}</span>
+        <input
+          v-show="isEdit"
+          v-model="edituser.phoneNum"
+          type="text"
+          class="edit-input"
+        >
       </div>
       <div class="btn">
-        <span class="edit" @click="editOrcancel">{{isEdit?'取消':'修改'}}</span>
-        <span class="delete" @click="removeOrsave" v-show="isEdit">{{isEdit?'保存':'删除'}}</span>
+        <span
+          class="edit"
+          @click="editOrcancel"
+        >{{ isEdit?'取消':'修改' }}</span>
+        <span
+          v-show="isEdit"
+          class="delete"
+          @click="removeOrsave"
+        >{{ isEdit?'保存':'删除' }}</span>
       </div>
-      <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+      <modal
+        :msg="msg"
+        :md-show="mdShow"
+        @closeMd="closeMd"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import axios from "axios";
-import { phoneNumCheck, stringCheck } from "common/js/util";
-import modal from "base/modal/modal";
+import axios from 'axios'
+import { phoneNumCheck, stringCheck } from 'common/js/util'
+import modal from 'base/modal/modal'
 export default {
+  components: {
+    modal
+  },
   data() {
     return {
       user: {},
       edituser: {},
       isEdit: false,
-      msg: "",
+      msg: '',
       mdShow: false
-    };
+    }
   },
   mounted() {
-    this.user = JSON.parse(localStorage.getItem("userMsg"));
-    this.edituser = Object.assign({}, this.user);
+    this.user = JSON.parse(localStorage.getItem('userMsg'))
+    this.edituser = Object.assign({}, this.user)
     if (!this.user.loginUserEmail) {
-      this.back();
+      this.back()
     }
   },
   methods: {
     editOrcancel() {
       if (this.isEdit) {
-        this.isEdit = false;
+        this.isEdit = false
       } else {
-        this.isEdit = true;
+        this.isEdit = true
       }
     },
     removeOrsave() {
       if (!stringCheck(this.edituser.userName)) {
-        this.msg = "姓名不能为空";
-        this.mdShow = true;
-        return;
+        this.msg = '姓名不能为空'
+        this.mdShow = true
+        return
       }
       if (!phoneNumCheck(this.edituser.phoneNum)) {
-        this.msg = "手机号码不符合规范";
-        this.mdShow = true;
-        return;
+        this.msg = '手机号码不符合规范'
+        this.mdShow = true
+        return
       }
       axios
-        .post("/users/editUserMsg", {
-          loginUserEmail: this.$cookie.get("loginUserEmail"),
+        .post('/users/editUserMsg', {
+          loginUserEmail: this.$cookie.get('loginUserEmail'),
           phoneNum: this.edituser.phoneNum,
           userName: this.edituser.userName
         })
         .then(res => {
-          if (res.data.status == 0) {
-            this.isEdit = false;
-            this.user = this.edituser;
-            localStorage.setItem("userMsg", JSON.stringify(this.edituser));
+          if (res.data.status === '0') {
+            this.isEdit = false
+            this.user = this.edituser
+            localStorage.setItem('userMsg', JSON.stringify(this.edituser))
           } else {
-            console.log(res.data);
+            console.log(res.data)
           }
-        });
+        })
     },
     closeMd() {
-      this.mdShow = false;
+      this.mdShow = false
     },
     back() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     }
-  },
-  components: {
-    modal
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -192,4 +222,3 @@ export default {
   opacity 0
   transform translate3d(100%, 0, 0)
 </style>
-

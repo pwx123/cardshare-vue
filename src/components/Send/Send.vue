@@ -2,95 +2,104 @@
   <transition name="slide">
     <div class="send">
       <div class="waiting">
-        <img src="./waiting.gif" alt="">
+        <img
+          src="./waiting.gif"
+          alt=""
+        >
         <div>好友输入以下数字或扫描二维码完成分享</div>
       </div>
       <div class="shareid">
-        {{shareId}}
+        {{ shareId }}
       </div>
       <div class="qpcode">
         二维码
       </div>
-      <div class="close" @click="close">取消</div>
-      <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+      <div
+        class="close"
+        @click="close"
+      >取消</div>
+      <modal
+        :msg="msg"
+        :md-show="mdShow"
+        @closeMd="closeMd"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import scroll from "base/scroll/scroll";
-import modal from "base/modal/modal";
-import { mapGetters } from "vuex";
+import scroll from 'base/scroll/scroll'
+import modal from 'base/modal/modal'
+import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    scroll,
+    modal
+  },
   data() {
     return {
-      user: "",
-      locity: "",
-      msg: "",
+      user: '',
+      locity: '',
+      msg: '',
       mdShow: false,
       position: {},
       receiverList: {},
-      shareId: ""
-    };
+      shareId: ''
+    }
+  },
+  computed: {
+    ...mapGetters(['card'])
   },
   mounted() {
-    if (!this.$cookie.get("loginUserEmail") || !this.card.userName) {
-      this.$router.push({ path: "/CardList" });
-      return;
+    if (!this.$cookie.get('loginUserEmail') || !this.card.userName) {
+      this.$router.push({ path: '/CardList' })
     } else {
-      this.user = this.$cookie.get("loginUserEmail");
-      this.shareId = this.getRandNum();
-      this.startSend();
+      this.user = this.$cookie.get('loginUserEmail')
+      this.shareId = this.getRandNum()
+      this.startSend()
     }
   },
   methods: {
     closeMd() {
-      this.mdShow = false;
-      this.$router.push({ path: "/CardList" });
+      this.mdShow = false
+      this.$router.push({ path: '/CardList' })
     },
     startSend() {
-      this.$socket.open();
-      this.$socket.emit("startSend", {
+      this.$socket.open()
+      this.$socket.emit('startSend', {
         user: this.user,
         shareId: this.shareId,
         card: this.card
-      });
+      })
     },
     getRandNum() {
-      let str = "";
+      let str = ''
       for (let i = 0; i < 6; i++) {
-        str += parseInt(Math.random() * 10);
+        str += parseInt(Math.random() * 10)
       }
       return str
     },
     close() {
-      this.$router.push({ path: "/CardList" });
+      this.$router.push({ path: '/CardList' })
     }
   },
   sockets: {
     connect() {
-      console.log("socket connected");
+      console.log('socket connected')
     },
     err(value) {
-      console.log(value);
+      console.log(value)
     },
     over(value) {
-      console.log(value);
+      console.log(value)
     }
   },
-  computed: {
-    ...mapGetters(["card"])
-  },
   beforeRouteLeave(to, from, next) {
-    this.$socket.close();
-    next();
-  },
-  components: {
-    scroll,
-    modal
+    this.$socket.close()
+    next()
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -157,4 +166,3 @@ export default {
 .slide-enter, .slide-leave-to
   transform translate3d(100%, 0, 0)
 </style>
-

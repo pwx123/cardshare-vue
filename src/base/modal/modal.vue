@@ -1,11 +1,17 @@
 <template>
   <transition name="slideTop">
-    <div class="modal-main" v-show="mdShow">
+    <div
+      v-show="mdShow"
+      class="modal-main"
+    >
       <div class="content">
         <div class="msg">
-          {{msg}}
+          {{ msg }}
         </div>
-        <div class="button" @click="closeMd">确认</div>
+        <div
+          class="button"
+          @click="closeMd"
+        >确认</div>
       </div>
     </div>
   </transition>
@@ -16,7 +22,7 @@ export default {
   props: {
     msg: {
       type: String,
-      default: ""
+      default: ''
     },
     mdShow: {
       type: Boolean,
@@ -25,10 +31,10 @@ export default {
   },
   methods: {
     closeMd() {
-      this.$emit("closeMd");
+      this.$emit('closeMd')
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

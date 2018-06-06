@@ -1,16 +1,30 @@
 <template>
   <div class="main">
-    <div class="btns" ref="btns" @click="rotate">
+    <div
+      ref="btns"
+      class="btns"
+      @click="rotate"
+    >
       <div class="icon">
-        <i class="icon iconfont icon-add"></i>
+        <i class="icon iconfont icon-add"/>
       </div>
     </div>
-    <router-link tag="div" class="btn btn1" v-show="!flag" to="/Receive">
-      <i class="icon iconfont icon-search"></i>
+    <router-link
+      v-show="!flag"
+      tag="div"
+      class="btn btn1"
+      to="/Receive"
+    >
+      <i class="icon iconfont icon-search"/>
       <span>接收名片</span>
     </router-link>
-    <router-link tag="div" class="btn btn2" v-show="!flag" to="/AddCard">
-      <i class="icon iconfont icon-add"></i>
+    <router-link
+      v-show="!flag"
+      tag="div"
+      class="btn btn2"
+      to="/AddCard"
+    >
+      <i class="icon iconfont icon-add"/>
       <span>添加名片</span>
     </router-link>
   </div>
@@ -22,20 +36,20 @@ export default {
   data() {
     return {
       flag: true
-    };
+    }
   },
   methods: {
     rotate() {
       if (this.flag) {
-        this.$refs.btns.style.transform = `rotate(45deg)`;
-        this.flag = !this.flag;
+        this.$refs.btns.style.transform = `rotate(45deg)`
+        this.flag = !this.flag
       } else {
-        this.$refs.btns.style.transform = `rotate(0deg)`;
-        this.flag = !this.flag;
+        this.$refs.btns.style.transform = `rotate(0deg)`
+        this.flag = !this.flag
       }
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -117,4 +131,3 @@ export default {
     top -98px
     opacity 1
 </style>
-

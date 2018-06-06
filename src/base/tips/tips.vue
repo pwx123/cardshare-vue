@@ -1,7 +1,10 @@
 <template>
-  <div class="tips" ref="tips">
+  <div
+    ref="tips"
+    class="tips"
+  >
     <div class="content">
-      <div class="msg">{{msg}}</div>
+      <div class="msg">{{ msg }}</div>
     </div>
   </div>
 </template>
@@ -15,28 +18,28 @@ export default {
     },
     type: {
       type: String,
-      default: "primary"
+      default: 'primary'
     }
   },
   data() {
     return {
       color: {
-        primary: "#409EFF",
-        danger: "#ff3333",
-        warn: "#ecc843"
+        primary: '#409EFF',
+        danger: '#ff3333',
+        warn: '#ecc843'
       }
-    };
+    }
   },
   watch: {
     type(newVal) {
-      let msgColor = this.color[newVal];
+      let msgColor = this.color[newVal]
       if (!msgColor) {
-        msgColor = "#409EFF";
+        msgColor = '#409EFF'
       }
-      this.$refs.tips.style.borderLeft = `10px solid ${msgColor}`;
+      this.$refs.tips.style.borderLeft = `10px solid ${msgColor}`
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

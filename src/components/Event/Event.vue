@@ -2,154 +2,184 @@
   <div class="event">
     <div class="header">
       <span>发现</span>
-      <i class="icon iconfont icon-add" @click="addEvent"></i>
+      <i
+        class="icon iconfont icon-add"
+        @click="addEvent"
+      />
     </div>
-    <scroll @pulldown="pulldown" :data="eventList" :pullDownRefresh="pullDownRefresh" :probe-type="probetype" :listenScroll="listenScroll" class="eventList" ref="eventList">
-      <ul class="events" ref="events">
-        <li v-for="(item,index) in eventList" class="eventItem">
+    <scroll
+      ref="eventList"
+      :data="eventList"
+      :pull-down-refresh="pullDownRefresh"
+      :probe-type="probetype"
+      :listen-scroll="listenScroll"
+      class="eventList"
+      @pulldown="pulldown"
+    >
+      <ul
+        ref="events"
+        class="events"
+      >
+        <li
+          v-for="(item,index) in eventList"
+          :key="index"
+          class="eventItem"
+        >
           <div class="item">
-            <a :href="'tel:'+item.phoneNum" class="phoneNum">
+            <a
+              :href="'tel:'+item.phoneNum"
+              class="phoneNum"
+            >
               <span>
-                <i class="icon iconfont icon-jisuanqi"></i>
+                <i class="icon iconfont icon-jisuanqi" />
               </span>
-              <span>{{item.phoneNum}}</span>
-              <span class="time">{{getTime(item.event.time)}}</span>
+              <span>{{ item.phoneNum }}</span>
+              <span class="time">{{ getTime(item.event.time) }}</span>
             </a>
-            <div class="title">{{item.event.title}}</div>
+            <div class="title">{{ item.event.title }}</div>
             <div class="detail">
               <p>
-                {{item.event.detail}}
+                {{ item.event.detail }}
               </p>
             </div>
           </div>
         </li>
       </ul>
     </scroll>
-    <tips class="tips" :msg="msg" :type="type" v-show="tipsShow"></tips>
-    <modal :msg="modalmsg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+    <tips
+      v-show="tipsShow"
+      :msg="msg"
+      :type="type"
+      class="tips"
+    />
+    <modal
+      :msg="modalmsg"
+      :md-show="mdShow"
+      @closeMd="closeMd"
+    />
   </div>
 </template>
 
 <script>
-import scroll from "base/scroll/scroll";
-import tips from "base/tips/tips";
-import { mapGetters } from "vuex";
-import { timeFormat } from "common/js/util";
+import scroll from 'base/scroll/scroll'
+import tips from 'base/tips/tips'
+import { mapGetters } from 'vuex'
+import { timeFormat } from 'common/js/util'
 
-import modal from "base/modal/modal";
+import modal from 'base/modal/modal'
 
-import axios from "axios";
+import axios from 'axios'
 export default {
-  name: "Event",
+  name: 'Event',
+  components: {
+    scroll,
+    tips,
+    modal
+  },
   data() {
     return {
       listenScroll: true,
       pullDownRefresh: true,
       probetype: 3,
       eventList: [],
-      msg: "",
-      type: "primary",
+      msg: '',
+      type: 'primary',
       tipsShow: false,
-      modalmsg: "",
+      modalmsg: '',
       mdShow: false,
-      userMsg: ""
-    };
-  },
-  mounted() {
-    this.userMsg = JSON.parse(localStorage.getItem("userMsg"));
-    setTimeout(() => {
-      this.getEventList();
-      let height = this.$refs.eventList.$el.offsetHeight;
-      this.$refs.events.style.minHeight = height - 25 + "px";
-    }, 20);
-  },
-  activated() {
-    if (this.refresh) {
-      this.getEventList();
+      userMsg: ''
     }
   },
   computed: {
-    ...mapGetters(["refresh"])
+    ...mapGetters(['refresh'])
+  },
+  mounted() {
+    this.userMsg = JSON.parse(localStorage.getItem('userMsg'))
+    setTimeout(() => {
+      this.getEventList()
+      let height = this.$refs.eventList.$el.offsetHeight
+      this.$refs.events.style.minHeight = height - 25 + 'px'
+    }, 20)
+  },
+  activated() {
+    if (this.refresh) {
+      this.getEventList()
+    }
   },
   methods: {
     addEvent() {
       if (!this.userMsg.phoneNum || !this.userMsg.userName) {
-        this.modalmsg = "要添加事件，请先完善信息";
-        this.mdShow = true;
+        this.modalmsg = '要添加事件，请先完善信息'
+        this.mdShow = true
       } else {
-        this.$router.push({ path: "/AddEvent" });
+        this.$router.push({ path: '/AddEvent' })
       }
     },
     getEventList() {
       axios
-        .post("/users/getEventList", {
-          loginUserEmail: this.$cookie.get("loginUserEmail")
+        .post('/users/getEventList', {
+          loginUserEmail: this.$cookie.get('loginUserEmail')
         })
         .then(res => {
-          if (res.data.status == 0) {
+          if (res.data.status === '0') {
             if (res.data.result) {
-              this._sortEventList(res.data.result);
+              this._sortEventList(res.data.result)
             }
           } else {
-            console.log(res.data);
+            console.log(res.data)
           }
-        });
+        })
     },
     _sortEventList(eventList) {
       let list = eventList.sort((a, b) => {
         if (new Date(a.event.time) > new Date(b.event.time)) {
-          return -1;
+          return -1
         } else {
-          return 1;
+          return 1
         }
-      });
-      this.eventList = list;
+      })
+      this.eventList = list
     },
     pulldown() {
       axios
-        .post("/users/getEventList", {
-          loginUserEmail: this.$cookie.get("loginUserEmail")
+        .post('/users/getEventList', {
+          loginUserEmail: this.$cookie.get('loginUserEmail')
         })
         .then(res => {
-          if (res.data.status == 0) {
+          if (res.data.status === '0') {
             if (res.data.result) {
-              this._sortEventList(res.data.result);
-              this.type = "primary";
-              this.msg = "刷新成功";
+              this._sortEventList(res.data.result)
+              this.type = 'primary'
+              this.msg = '刷新成功'
             }
           } else {
-            this.type = "danger";
-            this.msg = "刷新失败";
-            console.log(res.data);
+            this.type = 'danger'
+            this.msg = '刷新失败'
+            console.log(res.data)
           }
           setTimeout(() => {
-            this.tipsShow = true;
-          }, 1000);
+            this.tipsShow = true
+          }, 1000)
           setTimeout(() => {
-            this.tipsShow = false;
-          }, 3000);
-        });
+            this.tipsShow = false
+          }, 3000)
+        })
     },
     closeMd() {
-      this.mdShow = false;
-      this.$router.push({ path: "/UserMsg" });
+      this.mdShow = false
+      this.$router.push({ path: '/UserMsg' })
     },
     getTime(time) {
-      return timeFormat(time);
+      return timeFormat(time)
     }
   },
   beforeRouteEnter(to, from, next) {
-    //解决手机键盘弹起better-sroll失效的问题
+    // 解决手机键盘弹起better-sroll失效的问题
     next(vm => {
-      vm.$refs.eventList.refresh();
-    });
-  },
-  components: {
-    scroll,
-    tips,
-    modal
+      vm.$refs.eventList.refresh()
+    })
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

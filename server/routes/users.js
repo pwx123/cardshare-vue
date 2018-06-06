@@ -6,7 +6,7 @@ var Event = require('../models/events')
 var getKey = require('./../utils/util')
 
 /* GET users listing. */
-router.post('/login', function (req, res, next) {
+router.post('/login', function(req, res, next) {
   let param = {
     loginUserEmail: req.body.loginUserEmail,
     userPwd: req.body.userPwd
@@ -114,7 +114,7 @@ router.post('/login', function (req, res, next) {
 //       res.json(error);
 //     })
 // })
-router.post('/reg', function (req, res, next) {
+router.post('/reg', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   let userPwd = req.body.userPwd;
   let newUser = new User({
@@ -140,7 +140,7 @@ router.post('/reg', function (req, res, next) {
           result: ""
         });
       } else {
-        newUser.save(function (err) {
+        newUser.save(function(err) {
           if (err) {
             res.json({
               status: "100",
@@ -162,7 +162,7 @@ router.post('/reg', function (req, res, next) {
   })
 })
 
-router.post('/getUserMsg', function (req, res, next) {
+router.post('/getUserMsg', function(req, res, next) {
   let loginUserEmail = decodeURI(req.cookies.loginUserEmail);
   let param = {
     loginUserEmail: loginUserEmail
@@ -196,7 +196,7 @@ router.post('/getUserMsg', function (req, res, next) {
     }
   })
 })
-router.post('/editUserMsg', function (req, res, next) {
+router.post('/editUserMsg', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   let phoneNum = req.body.phoneNum;
   let userName = req.body.userName;
@@ -223,7 +223,7 @@ router.post('/editUserMsg', function (req, res, next) {
     }
   })
 })
-router.post('/getCardList', function (req, res, next) {
+router.post('/getCardList', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   Card.findOne({
     loginUserEmail: loginUserEmail
@@ -252,7 +252,7 @@ router.post('/getCardList', function (req, res, next) {
   })
 })
 
-router.post('/removeCard', function (req, res, next) {
+router.post('/removeCard', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   let cardId = req.body.cardId;
   Card.update({
@@ -280,7 +280,7 @@ router.post('/removeCard', function (req, res, next) {
   })
 })
 
-router.post('/editCard', function (req, res, next) {
+router.post('/editCard', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail
   let cardid = req.body.card.cardid;
   let userName = req.body.card.userName;
@@ -312,7 +312,7 @@ router.post('/editCard', function (req, res, next) {
   })
 })
 
-router.post('/addCard', function (req, res, next) {
+router.post('/addCard', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   let card = req.body.card;
   card.key = getKey(card.userName);
@@ -375,8 +375,8 @@ router.post('/addCard', function (req, res, next) {
   })
 })
 
-router.post('/hasNewEvent', function (req, res, next) {})
-router.post('/getEventList', function (req, res, next) {
+router.post('/hasNewEvent', function(req, res, next) {})
+router.post('/getEventList', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   getEventListStart(loginUserEmail)
     .then(result => {
@@ -396,7 +396,7 @@ router.post('/getEventList', function (req, res, next) {
       res.json(error);
     })
 })
-router.post('/addEvent', function (req, res, next) {
+router.post('/addEvent', function(req, res, next) {
   let item = {
     phoneNum: req.body.phoneNum,
     event: req.body.event

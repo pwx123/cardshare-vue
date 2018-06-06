@@ -1,13 +1,13 @@
 import Vue from 'vue'
-import VueSocketio from "vue-socket.io"
-import socketio from "socket.io-client"
+import VueSocketio from 'vue-socket.io'
+import socketio from 'socket.io-client'
 import VueCookie from 'vue-cookie'
 import App from './App'
 import router from './router'
 import store from './store'
+import './common/stylus/index.styl'
 
 Vue.config.productionTip = false
-import './common/stylus/index.styl'
 
 var io = socketio('http://59.110.141.44:3000/', {
   autoConnect: false

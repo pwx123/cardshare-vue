@@ -2,32 +2,50 @@
   <transition name="slide">
     <div class="search">
       <div class="searchInput">
-        <input type="text" @keyup="searchCard" v-model="search">
+        <input
+          v-model="search"
+          type="text"
+          @keyup="searchCard"
+        >
       </div>
-      <scroll :data="searchList" class="searchList">
+      <scroll
+        :data="searchList"
+        class="searchList"
+      >
         <ul class="cardList">
-          <div class="noSearch" v-show="!searchList.length">暂无结果</div>
-          <li v-for="(item,index) in searchList" class="card" @click="setDetailCard(item,index)">
+          <div
+            v-show="!searchList.length"
+            class="noSearch"
+          >暂无结果</div>
+          <li
+            v-for="(item,index) in searchList"
+            :key="index"
+            class="card"
+            @click="setDetailCard(item,index)"
+          >
             <div class="items">
               <div class="item username">
                 <span>姓名:</span>
-                <span v-html="item.userName"></span>
-                </span>
+                <span v-html="item.userName"/>
               </div>
               <div class="item phoneNum">
                 <span>电话:</span>
-                <span v-html="item.phoneNum"></span>
+                <span v-html="item.phoneNum"/>
               </div>
               <div class="item email">
                 <span>邮箱:</span>
-                <span v-html="item.email"></span>
+                <span v-html="item.email"/>
               </div>
             </div>
           </li>
         </ul>
       </scroll>
       <div class="cancelSearch">
-        <router-link to="/CardList" tag="div" class="cancel">取消</router-link>
+        <router-link
+          to="/CardList"
+          tag="div"
+          class="cancel"
+        >取消</router-link>
       </div>
     </div>
   </transition>
@@ -35,145 +53,143 @@
 </template>
 
 <script>
-import scroll from "base/scroll/scroll";
-import { mapGetters } from "vuex";
-
-import { mapMutations } from "vuex";
+import scroll from 'base/scroll/scroll'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
+
+  components: {
+    scroll
+  },
   data() {
     return {
       searchList: [],
-      search: "",
+      search: '',
       timeOut: undefined,
       colorList: [
-        "e91e63",
-        "74cb58",
-        "42a5f5",
-        "2979ff",
-        "4caf50",
-        "ffeb3b",
-        "cddc39"
+        'e91e63',
+        '74cb58',
+        '42a5f5',
+        '2979ff',
+        '4caf50',
+        'ffeb3b',
+        'cddc39'
       ]
-    };
+    }
+  },
+  computed: {
+    ...mapGetters({ dataList: 'cardList' })
   },
   mounted() {
     if (!this.dataList[0].items) {
-      //刷新dataList数据丢失 返回CardList
-      this.$router.push({ path: "/CardList" });
+      // 刷新dataList数据丢失 返回CardList
+      this.$router.push({ path: '/CardList' })
     }
   },
   methods: {
     searchCard() {
-      clearTimeout(this.timeOut);
-      if (this.search.length == 0) {
-        this.searchList = [];
-        return;
+      clearTimeout(this.timeOut)
+      if (this.search.length === 0) {
+        this.searchList = []
+        return
       }
       this.timeOut = setTimeout(() => {
-        this._searchList(this.dataList);
-      }, 400);
+        this._searchList(this.dataList)
+      }, 400)
     },
     setDetailCard(card, index) {
-      var newcard = this._getCard(card.cardid);
-      this.setCard(newcard);
+      var newcard = this._getCard(card.cardid)
+      this.setCard(newcard)
       this.$router.push({
-        path: "/CardDetail",
+        path: '/CardDetail',
         query: {
           color: this.colorList[index % 7]
         }
-      });
+      })
     },
     _getCard(cardId) {
       for (let i = 0; i < this.dataList.length; i++) {
         for (let j = 0; j < this.dataList[i].items.length; j++) {
-          if (this.dataList[i].items[j]["cardid"] == cardId) {
-            return this.dataList[i].items[j];
+          if (this.dataList[i].items[j]['cardid'] === cardId) {
+            return this.dataList[i].items[j]
           }
         }
       }
     },
     _searchList(dataList) {
-      this.searchList = [];
+      this.searchList = []
       for (let i = 0; i < dataList.length; i++) {
         for (let j = 0; j < dataList[i].items.length; j++) {
-          var flag = 0;
-          var searchCard = Object.assign({}, dataList[i].items[j]);
+          var flag = 0
+          var searchCard = Object.assign({}, dataList[i].items[j])
           var userName = this._setIndexOf(
-            dataList[i].items[j]["userName"],
+            dataList[i].items[j]['userName'],
             this.search
-          );
+          )
 
           var phoneNum = this._setIndexOf(
-            dataList[i].items[j]["phoneNum"],
+            dataList[i].items[j]['phoneNum'],
             this.search
-          );
+          )
 
           var email = this._setIndexOf(
-            dataList[i].items[j]["email"],
+            dataList[i].items[j]['email'],
             this.search
-          );
+          )
           if (userName) {
-            searchCard["userName"] = userName;
-            flag = 1;
+            searchCard['userName'] = userName
+            flag = 1
           }
           if (phoneNum) {
-            searchCard["phoneNum"] = phoneNum;
-            flag = 1;
+            searchCard['phoneNum'] = phoneNum
+            flag = 1
           }
           if (email) {
-            searchCard["email"] = email;
-            flag = 1;
+            searchCard['email'] = email
+            flag = 1
           }
           if (flag) {
-            this.searchList.push(searchCard);
+            this.searchList.push(searchCard)
           }
-          searchCard = null;
+          searchCard = null
         }
       }
     },
     _setIndexOf(value, search) {
-      var indexs = [];
-      var flag = 0;
-      var index = 0;
-      while (flag != -1) {
-        flag = value.indexOf(search, index);
-        if (flag != -1) {
-          indexs.push(flag);
+      var indexs = []
+      var flag = 0
+      var index = 0
+      while (flag !== -1) {
+        flag = value.indexOf(search, index)
+        if (flag !== -1) {
+          indexs.push(flag)
         }
-        index = flag + search.length;
-        if (flag != -1) {
-          indexs.push(index);
+        index = flag + search.length
+        if (flag !== -1) {
+          indexs.push(index)
         }
       }
-      if (indexs.length == 0) {
-        return false;
+      if (indexs.length === 0) {
+        return false
       } else {
-        return this._setHighLight(value, indexs);
+        return this._setHighLight(value, indexs)
       }
     },
     _setHighLight(value, indexs) {
-      var leftStr = "<span style='color:red'>";
-      var rightStr = "</span>";
-      var str;
-      var valueArr = [...value];
-      var count = 0;
+      var leftStr = "<span style='color:red'>"
+      var rightStr = '</span>'
+      var valueArr = [...value]
+      var count = 0
       for (let i = 0; i < indexs.length; i += 2) {
-        valueArr.splice(indexs[i] + count++, 0, leftStr);
-        valueArr.splice(indexs[i + 1] + count++, 0, rightStr);
+        valueArr.splice(indexs[i] + count++, 0, leftStr)
+        valueArr.splice(indexs[i + 1] + count++, 0, rightStr)
       }
-      return valueArr.join("");
+      return valueArr.join('')
     },
     ...mapMutations({
-      setCard: "SET_CARD_MUTATION"
+      setCard: 'SET_CARD_MUTATION'
     })
-  },
-  computed: {
-    ...mapGetters({ dataList: "cardList" })
-  },
-  components: {
-    scroll
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

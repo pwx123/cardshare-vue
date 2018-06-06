@@ -1,18 +1,18 @@
 const state = {
   card: {
-    "cardid": "",
-    "key": "",
-    "email": "",
-    "userName": "",
-    "phoneNum": ""
+    'cardid': '',
+    'key': '',
+    'email': '',
+    'userName': '',
+    'phoneNum': ''
   },
   refresh: false,
   cardList: [],
   userMsg: {
-    "loginUserEmail": "",
-    "newEventId": "",
-    "phoneNum": "",
-    "userName": ""
+    'loginUserEmail': '',
+    'newEventId': '',
+    'phoneNum': '',
+    'userName': ''
   }
 }
 

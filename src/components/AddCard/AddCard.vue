@@ -2,91 +2,116 @@
   <transition name="slide">
     <div class="addcard">
       <h1>Add Card</h1>
-      <input type="text" class="user" placeholder="用户名" v-model="userName"><br/>
-      <input type="text" class="phoneNum" placeholder="电话" v-model="phoneNum"><br/>
-      <input type="text" class="email" placeholder="邮箱" v-model="email"><br/>
+      <input
+        v-model="userName"
+        type="text"
+        class="user"
+        placeholder="用户名"
+      ><br>
+      <input
+        v-model="phoneNum"
+        type="text"
+        class="phoneNum"
+        placeholder="电话"
+      ><br>
+      <input
+        v-model="email"
+        type="text"
+        class="email"
+        placeholder="邮箱"
+      ><br>
       <div class="btns">
-        <div class="btn cancelbtn" @click="cancel">取消</div>
-        <div class="btn addbtn" @click="add">添加</div>
+        <div
+          class="btn cancelbtn"
+          @click="cancel"
+        >取消</div>
+        <div
+          class="btn addbtn"
+          @click="add"
+        >添加</div>
       </div>
-      <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+      <modal
+        :msg="msg"
+        :md-show="mdShow"
+        @closeMd="closeMd"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 import {
   getCardId,
   emailCheck,
   phoneNumCheck,
   stringCheck
-} from "common/js/util";
-import { mapMutations } from "vuex";
-import modal from "base/modal/modal";
+} from 'common/js/util'
+import { mapMutations } from 'vuex'
+import modal from 'base/modal/modal'
 
 export default {
+  components: {
+    modal
+  },
   data() {
     return {
-      userName: "",
-      phoneNum: "",
-      email: "",
-      msg: "",
+      userName: '',
+      phoneNum: '',
+      email: '',
+      msg: '',
       mdShow: false
-    };
+    }
   },
   methods: {
     add() {
       if (!stringCheck(this.userName)) {
-        this.msg = "姓名不能为空";
-        this.mdShow = true;
-        return;
+        this.msg = '姓名不能为空'
+        this.mdShow = true
+        return
       }
       if (!phoneNumCheck(this.phoneNum)) {
-        this.msg = "手机号码不符合规范";
-        this.mdShow = true;
-        return;
+        this.msg = '手机号码不符合规范'
+        this.mdShow = true
+        return
       }
       if (!emailCheck(this.email)) {
-        this.msg = "邮箱不符合规范";
-        this.mdShow = true;
-        return;
+        this.msg = '邮箱不符合规范'
+        this.mdShow = true
+        return
       }
       let card = {
-        cardid: getCardId(this.$cookie.get("loginUserEmail")),
+        cardid: getCardId(this.$cookie.get('loginUserEmail')),
         userName: this.userName,
         phoneNum: this.phoneNum,
         email: this.email,
-        key: ""
-      };
+        key: ''
+      }
       axios
-        .post("/users/addCard", {
-          loginUserEmail: this.$cookie.get("loginUserEmail"),
+        .post('/users/addCard', {
+          loginUserEmail: this.$cookie.get('loginUserEmail'),
           card: card
         })
         .then(res => {
-          if (res.data.status == 0) {
-            this.setReFresh(true); //重新加载CardList
-            this.$router.push("/CardList");
+          if (res.data.status === '0') {
+            this.setReFresh(true) // 重新加载CardList
+            this.$router.push('/CardList')
           } else {
-            console.log(res.data);
+            console.log(res.data)
           }
-        });
+        })
     },
     cancel() {
-      this.$router.push({ path: "/CardList" });
+      this.$router.push({ path: '/CardList' })
     },
     closeMd() {
-      this.mdShow = false;
+      this.mdShow = false
     },
     ...mapMutations({
-      setReFresh: "SET_REFRESH_MUTATION"
+      setReFresh: 'SET_REFRESH_MUTATION'
     })
-  },
-  components: {
-    modal
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -149,4 +174,3 @@ export default {
   opacity 0
   transform translate3d(100%, 0, 0)
 </style>
-

@@ -2,161 +2,180 @@
   <div class="cardlist">
     <div class="header">
       <span>名片夹</span>
-      <i class="icon iconfont icon-search" @click="showSearch"></i>
+      <i
+        class="icon iconfont icon-search"
+        @click="showSearch"
+      />
     </div>
-    <listview :data="cardList" :loading="loading" @select="setDetailCard" v-show="loginUserEmail" class="list" ref="listview">
-    </listview>
-    <router-link class="loginbtn" v-show="!loginUserEmail" to="/Login">立刻登陆</router-link>
-    <router-link class="addbtn" v-show="!cardList.length&&loginUserEmail" to="/AddCard">添加第一张名片</router-link>
-    <btn class="btn" v-show="loginUserEmail"></btn>
+    <listview
+      v-show="loginUserEmail"
+      ref="listview"
+      :data="cardList"
+      :loading="loading"
+      class="list"
+      @select="setDetailCard"
+    />
+    <router-link
+      v-show="!loginUserEmail"
+      class="loginbtn"
+      to="/Login"
+    >立刻登陆</router-link>
+    <router-link
+      v-show="!cardList.length&&loginUserEmail"
+      class="addbtn"
+      to="/AddCard"
+    >添加第一张名片</router-link>
+    <btn
+      v-show="loginUserEmail"
+      class="btn"
+    />
   </div>
 </template>
 
 <script>
-import scroll from "base/scroll/scroll";
-import listview from "base/listview/listview";
-import loading from "base/loading/loading";
-import Btn from "components/Btn/Btn";
+import scroll from 'base/scroll/scroll'
+import listview from 'base/listview/listview'
+import loading from 'base/loading/loading'
+import Btn from 'components/Btn/Btn'
 
-import axios from "axios";
-import { mapMutations } from "vuex";
-import { mapGetters } from "vuex";
+import axios from 'axios'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
-  name: "CardList",
-  data() {
-    return {
-      cardList: [],
-      loginUserEmail: "",
-      loading: true,
-      user: {},
-      issearch: false,
-      userMsg: ""
-    };
-  },
-  mounted() {
-    if (this.$cookie.get("loginUserEmail")) {
-      this._getCardList();
-    }
-  },
-  methods: {
-    async _getCardList() {
-      await this._getUserMsg();
-      axios
-        .post("/users/getCardList", {
-          loginUserEmail: this.$cookie.get("loginUserEmail")
-        })
-        .then(res => {
-          if (res.data.status == 0) {
-            if (res.data.result) {
-              this.cardList = this._sortCardList(res.data.result);
-              this.cardList.unshift({
-                items: [
-                  {
-                    cardid: "self",
-                    email: this.user.loginUserEmail,
-                    phoneNum: this.user.phoneNum,
-                    userName: this.user.userName
-                  }
-                ],
-                title: "我"
-              });
-              this.setCardList(this.cardList);
-            }
-            this.loading = false;
-          } else {
-            console.log(res.data);
-            this.loading = false;
-          }
-        });
-    },
-    _getUserMsg() {
-      axios.post("/users/getUserMsg").then(res => {
-        if (res.data.status == 0) {
-          if (res.data.result) {
-            this.user = res.data.result.user;
-            localStorage.setItem(
-              "userMsg",
-              JSON.stringify(res.data.result.user)
-            );
-          }
-        } else {
-          console.log(res.data);
-        }
-      });
-    },
-    _sortCardList(list) {
-      let map = {};
-      list.forEach((item, index) => {
-        const key = item.key;
-        if (!map[key]) {
-          map[key] = {
-            title: key,
-            items: []
-          };
-        }
-        map[key].items.push(item);
-      });
-      let res = [];
-      for (let key in map) {
-        let val = map[key];
-        res.push(val);
-      }
-      for (let i = 0; i < res.length; i++) {
-        res[i].items.sort((a, b) => {
-          return a.userName.localeCompare(b.userName, "zh");
-        });
-      }
-      res.sort((a, b) => {
-        return a.title.charCodeAt(0) - b.title.charCodeAt(0);
-      });
-      return res;
-    },
-    setDetailCard(card, color) {
-      this.setCard(card);
-      this.$router.push({
-        path: "/CardDetail",
-        query: {
-          color: color
-        }
-      });
-    },
-    showSearch() {
-      this.$router.push({
-        path: "/Search"
-      });
-    },
-    ...mapMutations({
-      setCard: "SET_CARD_MUTATION",
-      setReFresh: "SET_REFRESH_MUTATION",
-      setCardList: "SET_CARDLIST_MUTATION"
-    })
-  },
-  computed: {
-    ...mapGetters(["refresh"])
-  },
-  activated() {
-    this.loginUserEmail = this.$cookie.get("loginUserEmail");
-    if (this.refresh) {
-      this._getCardList();
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    this.setReFresh(false);
-    next();
-  },
-  beforeRouteEnter(to, from, next) {
-    //解决手机键盘弹起better-sroll失效的问题
-    next(vm => {
-      vm.$refs.listview.refresh();
-    });
-  },
+  name: 'CardList',
   components: {
     scroll,
     loading,
     listview,
     Btn
+  },
+  data() {
+    return {
+      cardList: [],
+      loginUserEmail: '',
+      loading: true,
+      user: {},
+      issearch: false,
+      userMsg: ''
+    }
+  },
+  computed: {
+    ...mapGetters(['refresh'])
+  },
+  mounted() {
+    if (this.$cookie.get('loginUserEmail')) {
+      this._getCardList()
+    }
+  },
+  activated() {
+    this.loginUserEmail = this.$cookie.get('loginUserEmail')
+    if (this.refresh) {
+      this._getCardList()
+    }
+  },
+  methods: {
+    async _getCardList() {
+      await this._getUserMsg()
+      axios
+        .post('/users/getCardList', {
+          loginUserEmail: this.$cookie.get('loginUserEmail')
+        })
+        .then(res => {
+          if (res.data.status === '0') {
+            if (res.data.result) {
+              this.cardList = this._sortCardList(res.data.result)
+              this.cardList.unshift({
+                items: [
+                  {
+                    cardid: 'self',
+                    email: this.user.loginUserEmail,
+                    phoneNum: this.user.phoneNum,
+                    userName: this.user.userName
+                  }
+                ],
+                title: '我'
+              })
+              this.setCardList(this.cardList)
+            }
+            this.loading = false
+          } else {
+            console.log(res.data)
+            this.loading = false
+          }
+        })
+    },
+    _getUserMsg() {
+      axios.post('/users/getUserMsg').then(res => {
+        if (res.data.status === '0') {
+          if (res.data.result) {
+            this.user = res.data.result.user
+            localStorage.setItem(
+              'userMsg',
+              JSON.stringify(res.data.result.user)
+            )
+          }
+        } else {
+          console.log(res.data)
+        }
+      })
+    },
+    _sortCardList(list) {
+      let map = {}
+      list.forEach((item, index) => {
+        const key = item.key
+        if (!map[key]) {
+          map[key] = {
+            title: key,
+            items: []
+          }
+        }
+        map[key].items.push(item)
+      })
+      let res = []
+      for (let key in map) {
+        let val = map[key]
+        res.push(val)
+      }
+      for (let i = 0; i < res.length; i++) {
+        res[i].items.sort((a, b) => {
+          return a.userName.localeCompare(b.userName, 'zh')
+        })
+      }
+      res.sort((a, b) => {
+        return a.title.charCodeAt(0) - b.title.charCodeAt(0)
+      })
+      return res
+    },
+    setDetailCard(card, color) {
+      this.setCard(card)
+      this.$router.push({
+        path: '/CardDetail',
+        query: {
+          color: color
+        }
+      })
+    },
+    showSearch() {
+      this.$router.push({
+        path: '/Search'
+      })
+    },
+    ...mapMutations({
+      setCard: 'SET_CARD_MUTATION',
+      setReFresh: 'SET_REFRESH_MUTATION',
+      setCardList: 'SET_CARDLIST_MUTATION'
+    })
+  },
+  beforeRouteLeave(to, from, next) {
+    this.setReFresh(false)
+    next()
+  },
+  beforeRouteEnter(to, from, next) {
+    // 解决手机键盘弹起better-sroll失效的问题
+    next(vm => {
+      vm.$refs.listview.refresh()
+    })
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -223,4 +242,3 @@ export default {
     right 20px
     bottom 80px
 </style>
-

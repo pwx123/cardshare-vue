@@ -1,19 +1,26 @@
 <template>
   <div class="account">
-    <div class="header" @click="login">
-      <div class="name">{{name}}</div>
-      <i class="icon iconfont icon-jiantouyou"></i>
+    <div
+      class="header"
+      @click="login"
+    >
+      <div class="name">{{ name }}</div>
+      <i class="icon iconfont icon-jiantouyou"/>
     </div>
     <div class="list setting first">
-      <i class="icon iconfont icon-setting"></i>
+      <i class="icon iconfont icon-setting"/>
       <span>设置</span>
     </div>
-    <div class="list quit" v-show="isshow" @click="quit">
-      <i class="icon iconfont icon-tuichu"></i>
+    <div
+      v-show="isshow"
+      class="list quit"
+      @click="quit"
+    >
+      <i class="icon iconfont icon-tuichu"/>
       <span>退出登陆</span>
     </div>
     <div class="list about">
-      <i class="icon iconfont icon-about"></i>
+      <i class="icon iconfont icon-about"/>
       <span>关于</span>
     </div>
   </div>
@@ -22,32 +29,32 @@
 <script>
 export default {
   data() {
-    return {};
+    return {}
+  },
+  computed: {
+    name() {
+      return this.$cookie.get('loginUserEmail')
+        ? this.$cookie.get('loginUserEmail')
+        : '登陆/注册'
+    },
+    isshow() {
+      return !!this.$cookie.get('loginUserEmail')
+    }
   },
   methods: {
     login() {
       if (!this.isshow) {
-        this.$router.push({ path: "/Login" });
+        this.$router.push({ path: '/Login' })
       } else {
-        this.$router.push({ path: "/UserMsg" });
+        this.$router.push({ path: '/UserMsg' })
       }
     },
     quit() {
-      this.$cookie.delete("loginUserEmail");
-      this.$router.push({ path: "/Login" });
-    }
-  },
-  computed: {
-    name() {
-      return this.$cookie.get("loginUserEmail")
-        ? this.$cookie.get("loginUserEmail")
-        : "登陆/注册";
-    },
-    isshow() {
-      return this.$cookie.get("loginUserEmail") ? true : false;
+      this.$cookie.delete('loginUserEmail')
+      this.$router.push({ path: '/Login' })
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -87,4 +94,3 @@ export default {
   padding-top 10px
   border-top 1px solid #aaa
 </style>
-

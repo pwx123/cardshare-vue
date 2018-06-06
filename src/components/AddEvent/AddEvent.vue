@@ -2,88 +2,109 @@
   <transition name="slide">
     <div class="usermsg">
       <div class="header">
-        <i class="icon iconfont icon-back" @click="back"></i>
+        <i
+          class="icon iconfont icon-back"
+          @click="back"
+        />
         <span>添加事件</span>
       </div>
       <div class="list">
         <span class="item">标题</span>
-        <input type="text" class="edit-input" v-model="event.title">
+        <input
+          v-model="event.title"
+          type="text"
+          class="edit-input"
+        >
       </div>
       <div class="list detail">
         <span class="item">详情</span>
-        <textarea type="text" class="edit-input detail-input" v-model="event.detail"></textarea>
+        <textarea
+          v-model="event.detail"
+          type="text"
+          class="edit-input detail-input"
+        />
       </div>
       <div class="btn">
-        <span class="edit" @click="cancel">取消</span>
-        <span class="delete" @click="save">保存</span>
+        <span
+          class="edit"
+          @click="cancel"
+        >取消</span>
+        <span
+          class="delete"
+          @click="save"
+        >保存</span>
       </div>
-      <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+      <modal
+        :msg="msg"
+        :md-show="mdShow"
+        @closeMd="closeMd"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import axios from "axios";
-import { mapMutations } from "vuex";
-import { stringCheck } from "common/js/util";
-import modal from "base/modal/modal";
+import axios from 'axios'
+import { mapMutations } from 'vuex'
+import { stringCheck } from 'common/js/util'
+import modal from 'base/modal/modal'
 export default {
+  components: {
+    modal
+  },
   data() {
     return {
       event: {
-        time: "",
-        title: "",
-        detail: ""
+        time: '',
+        title: '',
+        detail: ''
       },
       isEdit: false,
-      msg: "",
+      msg: '',
       mdShow: false,
-      userMsg: ""
-    };
+      userMsg: ''
+    }
   },
   mounted() {
-    this.userMsg = JSON.parse(localStorage.getItem("userMsg"));
+    this.userMsg = JSON.parse(localStorage.getItem('userMsg'))
   },
   methods: {
     cancel() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     save() {
       if (!stringCheck(this.event.title) || !stringCheck(this.event.detail)) {
-        this.msg = "信息不能为空";
-        this.mdShow = true;
-        return;
+        this.msg = '信息不能为空'
+        this.mdShow = true
+        return
       }
-      let data = new Date();
-      this.event.time = data.toJSON();
+      let data = new Date()
+      this.event.time = data.toJSON()
       axios
-        .post("/users/addEvent", {
+        .post('/users/addEvent', {
           phoneNum: this.userMsg.phoneNum,
           event: this.event
         })
         .then(res => {
-          if (res.data.status == 0) {
-            this.setReFresh(true); //重新加载
-            this.$router.push({ path: "/Event" });
+          if (res.data.status === '0') {
+            this.setReFresh(true) // 重新加载
+            this.$router.push({ path: '/Event' })
           } else {
-            console.log(res.data);
+            console.log(res.data)
           }
-        });
+        })
     },
     closeMd() {
-      this.mdShow = false;
+      this.mdShow = false
     },
     back() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     ...mapMutations({
-      setReFresh: "SET_REFRESH_MUTATION"
+      setReFresh: 'SET_REFRESH_MUTATION'
     })
-  },
-  components: {
-    modal
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -190,4 +211,3 @@ export default {
   opacity 0
   transform translate3d(100%, 0, 0)
 </style>
-

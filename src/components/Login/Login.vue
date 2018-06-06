@@ -2,95 +2,124 @@
   <transition name="slide">
     <div class="login">
       <h1>CardShare Login</h1>
-      <input type="text" class="user" placeholder="邮箱" v-model="loginUserEmail"><br/>
-      <input type="password" class="password" placeholder="密码" v-model="userPwd"><br/>
+      <input
+        v-model="loginUserEmail"
+        type="text"
+        class="user"
+        placeholder="邮箱"
+      ><br>
+      <input
+        v-model="userPwd"
+        type="password"
+        class="password"
+        placeholder="密码"
+      ><br>
       <div v-show="identifyShow">
-        <input type="text" class="identify" placeholder="验证码" v-model="identify">
-        <span class="identify-span" @click="getNewIdentify">{{identifyCreate}}</span>
+        <input
+          v-model="identify"
+          type="text"
+          class="identify"
+          placeholder="验证码"
+        >
+        <span
+          class="identify-span"
+          @click="getNewIdentify"
+        >{{ identifyCreate }}</span>
       </div>
-      <div class="logbtn" @click="login">登陆</div>
+      <div
+        class="logbtn"
+        @click="login"
+      >登陆</div>
       <div class="line">
-        <span></span>
+        <span/>
         <b>或</b>
-        <span></span>
+        <span/>
       </div>
-      <router-link tag="div" class="regbtn" to="/Reg">注册</router-link>
-      <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+      <router-link
+        tag="div"
+        class="regbtn"
+        to="/Reg"
+      >注册</router-link>
+      <modal
+        :msg="msg"
+        :md-show="mdShow"
+        @closeMd="closeMd"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import modal from "base/modal/modal";
-import axios from "axios";
-import MD5 from "crypto-js/md5";
-import { emailCheck, pwdCheck, getFiveWord } from "common/js/util";
-import { mapGetters, mapMutations } from "vuex";
+import modal from 'base/modal/modal'
+import axios from 'axios'
+import MD5 from 'crypto-js/md5'
+import { emailCheck, pwdCheck, getFiveWord } from 'common/js/util'
+import { mapMutations } from 'vuex'
 export default {
+  components: {
+    modal
+  },
   data() {
     return {
-      loginUserEmail: "",
-      userPwd: "",
-      msg: "",
+      loginUserEmail: '',
+      userPwd: '',
+      msg: '',
       mdShow: false,
       errCount: 0,
       identifyShow: false,
-      identify: "",
-      identifyCreate: "3213"
-    };
+      identify: '',
+      identifyCreate: '3213'
+    }
   },
   methods: {
     login() {
       if (!emailCheck(this.loginUserEmail) || !pwdCheck(this.userPwd)) {
-        this.msg = "邮箱或密码格式不正确";
-        this.mdShow = true;
-        this.loginUserEmail = "";
-        this.userPwd = "";
+        this.msg = '邮箱或密码格式不正确'
+        this.mdShow = true
+        this.loginUserEmail = ''
+        this.userPwd = ''
       } else {
         if (this.identifyShow) {
           if (
-            this.identify.toLowerCase() != this.identifyCreate.toLowerCase()
+            this.identify.toLowerCase() !== this.identifyCreate.toLowerCase()
           ) {
-            this.msg = "验证码错误";
-            this.mdShow = true;
-            return;
+            this.msg = '验证码错误'
+            this.mdShow = true
+            return
           }
         }
         axios
-          .post("/users/login", {
+          .post('/users/login', {
             loginUserEmail: this.loginUserEmail,
             userPwd: MD5(this.userPwd).toString()
           })
           .then(res => {
-            if (res.data.status == "0") {
-              this.setReFresh(true);
-              this.$router.push("/CardList");
+            if (res.data.status === '0') {
+              this.setReFresh(true)
+              this.$router.push('/CardList')
             } else {
-              this.errCount++;
+              this.errCount++
               if (this.errCount >= 3) {
-                this.identifyShow = true;
-                this.identifyCreate = getFiveWord();
+                this.identifyShow = true
+                this.identifyCreate = getFiveWord()
               }
-              this.msg = res.data.msg;
-              this.mdShow = true;
+              this.msg = res.data.msg
+              this.mdShow = true
             }
-          });
+          })
       }
     },
     getNewIdentify() {
-      this.identifyCreate = getFiveWord();
+      this.identifyCreate = getFiveWord()
     },
     closeMd() {
-      this.mdShow = false;
+      this.mdShow = false
     },
     ...mapMutations({
-      setReFresh: "SET_REFRESH_MUTATION"
+      setReFresh: 'SET_REFRESH_MUTATION'
     })
-  },
-  components: {
-    modal
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -188,4 +217,3 @@ export default {
   opacity 0
   transform translate3d(100%, 0, 0)
 </style>
-

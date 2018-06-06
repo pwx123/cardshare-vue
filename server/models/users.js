@@ -2,11 +2,11 @@ let mongoose = require('mongoose')
 let Schema = mongoose.Schema
 
 let userSchema = new Schema({
-  "loginUserEmail": String,
-  "userPwd": String,
-  "userName": String,
-  "newEventId": String,
-  "phoneNum": String
+  'loginUserEmail': String,
+  'userPwd': String,
+  'userName': String,
+  'newEventId': String,
+  'phoneNum': String
 })
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema)

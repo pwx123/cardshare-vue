@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+/* eslint-disable */
 const CardList = () =>
   import ("@/components/CardList/CardList")
 const Account = () =>
@@ -24,6 +25,7 @@ const UserMsg = () =>
   import ("@/components/UserMsg/UserMsg")
 const AddEvent = () =>
   import ("@/components/AddEvent/AddEvent")
+/* eslint-enable */
 Vue.use(Router)
 
 export default new Router({

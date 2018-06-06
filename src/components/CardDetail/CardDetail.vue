@@ -1,66 +1,139 @@
 <template>
   <transition name="slide">
     <div class="carddetail">
-      <div class="header" ref="header" :style="{backgroundColor:color}">
-        <div class="picname" ref="picname">
-          <div class="pic" :style="{backgroundColor:color}">{{userNameCharAt}}</div>
-          <div class="userName">{{card.userName}}</div>
+      <div
+        ref="header"
+        :style="{backgroundColor:color}"
+        class="header"
+      >
+        <div
+          ref="picname"
+          class="picname"
+        >
+          <div
+            :style="{backgroundColor:color}"
+            class="pic"
+          >{{ userNameCharAt }}</div>
+          <div class="userName">{{ card.userName }}</div>
         </div>
       </div>
-      <div class="bg-layer" ref="layer">
-      </div>
-      <scroll @scroll="scroll" :listen-scroll="listenScroll" :probe-type="probetype" class="scrolldetail" ref="scrolldetail">
-        <ul class="scrolldetailul" ref="scrolldetailul">
+      <div
+        ref="layer"
+        class="bg-layer"
+      />
+      <scroll
+        ref="scrolldetail"
+        :listen-scroll="listenScroll"
+        :probe-type="probetype"
+        class="scrolldetail"
+        @scroll="scroll"
+      >
+        <ul
+          ref="scrolldetailul"
+          class="scrolldetailul"
+        >
           <li>
             <span>姓名</span>
-            <span class="value" v-show="!isEdit">{{card.userName}}</span>
-            <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.userName">
+            <span
+              v-show="!isEdit"
+              class="value"
+            >{{ card.userName }}</span>
+            <input
+              v-show="isEdit"
+              v-model="editcard.userName"
+              type="text"
+              class="edit-input"
+            >
           </li>
           <li>
             <span>电话</span>
-            <span class="value" v-show="!isEdit">
-              <a :href="'tel:'+card.phoneNum">{{card.phoneNum}}
-                <i class="icon iconfont icon-jisuanqi"></i>
+            <span
+              v-show="!isEdit"
+              class="value"
+            >
+              <a :href="'tel:'+card.phoneNum">{{ card.phoneNum }}
+                <i class="icon iconfont icon-jisuanqi" />
               </a>
             </span>
-            <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.phoneNum">
+            <input
+              v-show="isEdit"
+              v-model="editcard.phoneNum"
+              type="text"
+              class="edit-input"
+            >
           </li>
           <li>
             <span>邮箱</span>
-            <span class="value" v-show="!isEdit">
-              <a :href="'mailto:'+card.email">{{card.email}}
-                <i class="icon iconfont icon-youjianduanxin"></i>
+            <span
+              v-show="!isEdit"
+              class="value"
+            >
+              <a :href="'mailto:'+card.email">{{ card.email }}
+                <i class="icon iconfont icon-youjianduanxin" />
               </a>
             </span>
-            <input type="text" v-show="isEdit" class="edit-input" v-model="editcard.email">
+            <input
+              v-show="isEdit"
+              v-model="editcard.email"
+              type="text"
+              class="edit-input"
+            >
           </li>
-          <li class="li-btn" v-show="card.cardid=='self'?false:true">
-            <span class="edit" @click="editOrcancel">{{isEdit?'取消':'编辑'}}</span>
-            <span class="delete" @click="removeOrsave">{{isEdit?'保存':'删除'}}</span>
+          <li
+            v-show="card.cardid=='self'?false:true"
+            class="li-btn"
+          >
+            <span
+              class="edit"
+              @click="editOrcancel"
+            >{{ isEdit?'取消':'编辑' }}</span>
+            <span
+              class="delete"
+              @click="removeOrsave"
+            >{{ isEdit?'保存':'删除' }}</span>
           </li>
           <li class="li-btn">
-            <span class="share" @click="share">分享</span>
+            <span
+              class="share"
+              @click="share"
+            >分享</span>
           </li>
         </ul>
       </scroll>
-      <div class="modalbg" v-show="canremove">
+      <div
+        v-show="canremove"
+        class="modalbg"
+      >
         <div class="modal">
           <div class="title">确定要删除吗</div>
           <div class="btns">
-            <div class="btn btncancel" @click="cencel">取消</div>
-            <div class="btn btnsave" @click="remove">确定</div>
+            <div
+              class="btn btncancel"
+              @click="cencel"
+            >取消</div>
+            <div
+              class="btn btnsave"
+              @click="remove"
+            >确定</div>
           </div>
         </div>
       </div>
-      <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
-      <div class="modalshare" v-show="modalshare">
+      <modal
+        :msg="msg"
+        :md-show="mdShow"
+        @closeMd="closeMd"
+      />
+      <div
+        v-show="modalshare"
+        class="modalshare"
+      >
         <div class="shareContainer">
           <div class="shareItem shareItem-QQ">
-            <i class="icon iconfont icon-QQ"></i>
+            <i class="icon iconfont icon-QQ" />
             <span>分享到QQ</span>
           </div>
           <div class="shareItem shareItem-weixin">
-            <i class="icon iconfont icon-weixin"></i>
+            <i class="icon iconfont icon-weixin" />
             <span>分享到微信</span>
           </div>
           <div class="shareItem">
@@ -81,169 +154,168 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { mapMutations } from "vuex";
-import { emailCheck, phoneNumCheck, stringCheck } from "common/js/util";
-import axios from "axios";
-import scroll from "base/scroll/scroll";
-import modal from "base/modal/modal";
+import { mapGetters, mapMutations } from 'vuex'
+import { emailCheck, phoneNumCheck, stringCheck } from 'common/js/util'
+import axios from 'axios'
+import scroll from 'base/scroll/scroll'
+import modal from 'base/modal/modal'
 
-const MIN_SCROLL = 50;
-const HEADER_HEIGHT = 250;
+const MIN_SCROLL = 50
+const HEADER_HEIGHT = 250
 
 export default {
+  components: {
+    scroll,
+    modal
+  },
   data() {
     return {
       scrollY: 0,
       isEdit: false,
       editcard: {},
-      slide: "slide",
-      color: "#" + this.$route.query.color,
+      slide: 'slide',
+      color: '#' + this.$route.query.color,
       canremove: false,
       modalshare: false,
-      msg: "",
+      msg: '',
       mdShow: false
-    };
+    }
   },
-  mounted() {
-    this._getStart();
-  },
-  created() {
-    this.listenScroll = true;
-    this.probetype = 3;
-  },
-  methods: {
-    scroll(pos) {
-      this.scrollY = pos.y;
-    },
-    editOrcancel() {
-      if (this.isEdit) {
-        this.isEdit = false;
-      } else {
-        this.editcard.key = this.card.key;
-        this.editcard.cardid = this.card.cardid;
-        this.editcard.userName = this.card.userName;
-        this.editcard.phoneNum = this.card.phoneNum;
-        this.editcard.email = this.card.email;
-        this.isEdit = true;
+  computed: {
+    ...mapGetters(['card']),
+    userNameCharAt() {
+      if (this.card) {
+        return this.card.userName.charAt(0)
       }
-    },
-    cencel() {
-      this.canremove = false;
-    },
-    share() {
-      this.modalshare = true;
-    },
-    closeShare() {
-      this.modalshare = false;
-    },
-    remove() {
-      axios
-        .post("/users/removeCard", {
-          loginUserEmail: this.$cookie.get("loginUserEmail"),
-          cardId: this.card.cardid
-        })
-        .then(res => {
-          if (res.data.status == 0) {
-            this.setReFresh(true); //重新加载CardList
-            this.$router.push({ path: "/CardList" });
-          } else {
-            console.log(res.data);
-          }
-        });
-    },
-    removeOrsave() {
-      if (this.isEdit) {
-        if (!stringCheck(this.editcard.userName)) {
-          this.msg = "姓名不能为空";
-          this.mdShow = true;
-          return;
-        }
-        if (!phoneNumCheck(this.editcard.phoneNum)) {
-          this.msg = "手机号码不符合规范";
-          this.mdShow = true;
-          return;
-        }
-        if (!emailCheck(this.editcard.email)) {
-          this.msg = "邮箱不符合规范";
-          this.mdShow = true;
-          return;
-        }
-        axios
-          .post("/users/editCard", {
-            loginUserEmail: this.$cookie.get("loginUserEmail"),
-            card: this.editcard
-          })
-          .then(res => {
-            if (res.data.status == 0) {
-              this.setReFresh(true); //重新加载CardList
-              this.isEdit = false;
-              this.setCard(this.editcard);
-            } else {
-              console.log(res.data);
-            }
-          });
-      } else {
-        this.canremove = true;
-      }
-    },
-    _getStart() {
-      if (!this.card.userName) {
-        this.$router.push("/CardList");
-        return;
-      }
-      setTimeout(() => {
-        this.$refs.scrolldetailul.style.height =
-          this.$refs.scrolldetail.$el.offsetHeight + 250 - 50 + "px";
-      }, 20);
-    },
-    closeMd() {
-      this.mdShow = false;
-    },
-    ...mapMutations({
-      setCard: "SET_CARD_MUTATION",
-      setReFresh: "SET_REFRESH_MUTATION"
-    })
+    }
   },
   watch: {
     scrollY(newY) {
       if (-newY < HEADER_HEIGHT - MIN_SCROLL && newY < 0) {
-        this.$refs.header.style.height = HEADER_HEIGHT + "px";
-        this.$refs.header.style.zIndex = 0;
-        this.$refs.header.style.transform = `scale(1)`;
-        this.$refs.layer.style.transform = `translate3d(0,${newY}px,0)`;
+        this.$refs.header.style.height = HEADER_HEIGHT + 'px'
+        this.$refs.header.style.zIndex = 0
+        this.$refs.header.style.transform = `scale(1)`
+        this.$refs.layer.style.transform = `translate3d(0,${newY}px,0)`
         this.$refs.picname.style.transform = `translate3d(${newY /
           40 *
-          9}px,${newY}px,0)`;
+          9}px,${newY}px,0)`
       } else if (newY < 0) {
-        this.$refs.header.style.height = MIN_SCROLL + "px";
-        this.$refs.header.style.zIndex = 10;
-        this.$refs.layer.style.transform = `translate3d(0,-190px,0)`;
-        this.$refs.picname.style.transform = `translate3d(-40px,-190px,0)`;
+        this.$refs.header.style.height = MIN_SCROLL + 'px'
+        this.$refs.header.style.zIndex = 10
+        this.$refs.layer.style.transform = `translate3d(0,-190px,0)`
+        this.$refs.picname.style.transform = `translate3d(-40px,-190px,0)`
       }
       if (newY > 0) {
-        let height = HEADER_HEIGHT + newY;
-        let delta = height / HEADER_HEIGHT;
-        this.$refs.header.style.zIndex = 10;
-        this.$refs.header.style.transform = `scale(${delta})`;
-        this.$refs.layer.style.transform = `translate3d(0,0,0)`;
-        this.$refs.picname.style.transform = `translate3d(0,0,0)`;
+        let height = HEADER_HEIGHT + newY
+        let delta = height / HEADER_HEIGHT
+        this.$refs.header.style.zIndex = 10
+        this.$refs.header.style.transform = `scale(${delta})`
+        this.$refs.layer.style.transform = `translate3d(0,0,0)`
+        this.$refs.picname.style.transform = `translate3d(0,0,0)`
       }
     }
   },
-  computed: {
-    ...mapGetters(["card"]),
-    userNameCharAt() {
-      if (this.card) {
-        return this.card.userName.charAt(0);
-      }
-    }
+  mounted() {
+    this._getStart()
   },
-  components: {
-    scroll,
-    modal
+  created() {
+    this.listenScroll = true
+    this.probetype = 3
+  },
+  methods: {
+    scroll(pos) {
+      this.scrollY = pos.y
+    },
+    editOrcancel() {
+      if (this.isEdit) {
+        this.isEdit = false
+      } else {
+        this.editcard.key = this.card.key
+        this.editcard.cardid = this.card.cardid
+        this.editcard.userName = this.card.userName
+        this.editcard.phoneNum = this.card.phoneNum
+        this.editcard.email = this.card.email
+        this.isEdit = true
+      }
+    },
+    cencel() {
+      this.canremove = false
+    },
+    share() {
+      this.modalshare = true
+    },
+    closeShare() {
+      this.modalshare = false
+    },
+    remove() {
+      axios
+        .post('/users/removeCard', {
+          loginUserEmail: this.$cookie.get('loginUserEmail'),
+          cardId: this.card.cardid
+        })
+        .then(res => {
+          if (res.data.status === '0') {
+            this.setReFresh(true) // 重新加载CardList
+            this.$router.push({ path: '/CardList' })
+          } else {
+            console.log(res.data)
+          }
+        })
+    },
+    removeOrsave() {
+      if (this.isEdit) {
+        if (!stringCheck(this.editcard.userName)) {
+          this.msg = '姓名不能为空'
+          this.mdShow = true
+          return
+        }
+        if (!phoneNumCheck(this.editcard.phoneNum)) {
+          this.msg = '手机号码不符合规范'
+          this.mdShow = true
+          return
+        }
+        if (!emailCheck(this.editcard.email)) {
+          this.msg = '邮箱不符合规范'
+          this.mdShow = true
+          return
+        }
+        axios
+          .post('/users/editCard', {
+            loginUserEmail: this.$cookie.get('loginUserEmail'),
+            card: this.editcard
+          })
+          .then(res => {
+            if (res.data.status === '0') {
+              this.setReFresh(true) // 重新加载CardList
+              this.isEdit = false
+              this.setCard(this.editcard)
+            } else {
+              console.log(res.data)
+            }
+          })
+      } else {
+        this.canremove = true
+      }
+    },
+    _getStart() {
+      if (!this.card.userName) {
+        this.$router.push('/CardList')
+        return
+      }
+      setTimeout(() => {
+        this.$refs.scrolldetailul.style.height =
+          this.$refs.scrolldetail.$el.offsetHeight + 250 - 50 + 'px'
+      }, 20)
+    },
+    closeMd() {
+      this.mdShow = false
+    },
+    ...mapMutations({
+      setCard: 'SET_CARD_MUTATION',
+      setReFresh: 'SET_REFRESH_MUTATION'
+    })
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -481,4 +553,3 @@ export default {
   opacity 0
   transform translate3d(100%, 0, 0)
 </style>
-

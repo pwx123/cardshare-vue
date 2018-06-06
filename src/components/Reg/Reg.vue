@@ -2,68 +2,90 @@
   <transition name="slide">
     <div class="reg">
       <h1>CardShare Register</h1>
-      <input type="text" class="user" placeholder="邮箱" v-model="loginUserEmail"><br/>
-      <input type="password" class="password" placeholder="密码" v-model="userPwd"><br/>
-      <input type="password" class="password" placeholder="确认密码" v-model="userPwdRep"><br/>
-      <div class="regbtn" @click="reg">注册</div>
-      <modal :msg="msg" :mdShow="mdShow" @closeMd="closeMd"></modal>
+      <input
+        v-model="loginUserEmail"
+        type="text"
+        class="user"
+        placeholder="邮箱"
+      ><br>
+      <input
+        v-model="userPwd"
+        type="password"
+        class="password"
+        placeholder="密码"
+      ><br>
+      <input
+        v-model="userPwdRep"
+        type="password"
+        class="password"
+        placeholder="确认密码"
+      ><br>
+      <div
+        class="regbtn"
+        @click="reg"
+      >注册</div>
+      <modal
+        :msg="msg"
+        :md-show="mdShow"
+        @closeMd="closeMd"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import modal from "base/modal/modal";
-import axios from "axios";
-import { emailCheck, pwdCheck } from "common/js/util";
-import MD5 from "crypto-js/md5";
+import modal from 'base/modal/modal'
+import axios from 'axios'
+import { emailCheck, pwdCheck } from 'common/js/util'
+import MD5 from 'crypto-js/md5'
 
 export default {
+  components: {
+    modal
+  },
   data() {
     return {
-      loginUserEmail: "",
-      userPwd: "",
-      userPwdRep: "",
-      msg: "",
+      loginUserEmail: '',
+      userPwd: '',
+      userPwdRep: '',
+      msg: '',
       mdShow: false
-    };
+    }
   },
   methods: {
     reg() {
       if (!emailCheck(this.loginUserEmail) || !pwdCheck(this.userPwd)) {
-        this.msg = "邮箱或密码格式不正确 \r\n 密码为6-18位字母开头的字母和数字";
-        this.mdShow = true;
-        this.loginUserEmail = "";
-        this.userPwd = "";
-        this.userPwdRep = "";
-      } else if (this.userPwd != this.userPwdRep) {
-        this.msg = "两次输入的密码不一致";
-        this.mdShow = true;
-        this.userPwd = "";
-        this.userPwdRep = "";
+        this.msg = '邮箱或密码格式不正确 \r\n 密码为6-18位字母开头的字母和数字'
+        this.mdShow = true
+        this.loginUserEmail = ''
+        this.userPwd = ''
+        this.userPwdRep = ''
+      } else if (this.userPwd !== this.userPwdRep) {
+        this.msg = '两次输入的密码不一致'
+        this.mdShow = true
+        this.userPwd = ''
+        this.userPwdRep = ''
       } else {
         axios
-          .post("/users/reg", {
+          .post('/users/reg', {
             loginUserEmail: this.loginUserEmail,
             userPwd: MD5(this.userPwd).toString()
           })
           .then(res => {
-            if (res.data.status == "0") {
-              this.$router.push("/Login");
+            if (res.data.status === '0') {
+              this.$router.push('/Login')
             } else {
-              this.msg = res.data.msg;
-              this.mdShow = true;
+              this.msg = res.data.msg
+              this.mdShow = true
             }
-          });
+          })
       }
     },
     closeMd() {
-      this.mdShow = false;
+      this.mdShow = false
     }
-  },
-  components: {
-    modal
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -122,4 +144,3 @@ export default {
   opacity 0
   transform translate3d(100%, 0, 0)
 </style>
-
