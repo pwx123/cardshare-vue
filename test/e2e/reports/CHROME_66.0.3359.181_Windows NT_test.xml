@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites errors="0"
-            failures="0"
+            failures="1"
             tests="1">
 
   <testsuite name="test"
-    errors="0" failures="0" hostname="" id="" package="test" skipped="0"
-    tests="1" time="9.226" timestamp="Wed, 06 Jun 2018 11:39:27 GMT">
+    errors="0" failures="1" hostname="" id="" package="test" skipped="0"
+    tests="1" time="19.33" timestamp="Wed, 06 Jun 2018 12:12:31 GMT">
   
-    <testcase name="default e2e tests" classname="test" time="9.226" assertions="4">
+    <testcase name="default e2e tests" classname="test" time="19.33" assertions="2">
 
-    
-
-    
-
-    
+      <failure message="Testing if element &lt;.hello&gt; is present.">    at Object.defaultE2eTests [as default e2e tests] (E:/Web/VUE/cardShareNew/test/e2e/specs/test.js:14:15)
+    at _combinedTickCallback (internal/process/next_tick.js:131:7)</failure>
 
     
     </testcase>
