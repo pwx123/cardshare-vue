@@ -5,10 +5,10 @@
       @click="login"
     >
       <div class="name">{{ name }}</div>
-      <i class="icon iconfont icon-jiantouyou"/>
+      <i class="icon iconfont icon-jiantouyou" />
     </div>
     <div class="list setting first">
-      <i class="icon iconfont icon-setting"/>
+      <i class="icon iconfont icon-setting" />
       <span>设置</span>
     </div>
     <div
@@ -16,11 +16,11 @@
       class="list quit"
       @click="quit"
     >
-      <i class="icon iconfont icon-tuichu"/>
+      <i class="icon iconfont icon-tuichu" />
       <span>退出登陆</span>
     </div>
     <div class="list about">
-      <i class="icon iconfont icon-about"/>
+      <i class="icon iconfont icon-about" />
       <span>关于</span>
     </div>
   </div>
