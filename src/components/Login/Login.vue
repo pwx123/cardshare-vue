@@ -61,8 +61,8 @@ export default {
   },
   data() {
     return {
-      loginUserEmail: '',
-      userPwd: '',
+      loginUserEmail: '181353@qq.com',
+      userPwd: 'pwx980101',
       msg: '',
       mdShow: false,
       errCount: 0,
