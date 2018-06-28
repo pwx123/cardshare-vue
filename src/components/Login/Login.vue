@@ -40,9 +40,10 @@
         class="regbtn"
         to="/Reg"
       >注册</router-link>
-      <modal
+      <modal 
         :msg="msg"
         :md-show="mdShow"
+        class="modal"
         @closeMd="closeMd"
       />
     </div>

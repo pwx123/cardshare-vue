@@ -95,16 +95,15 @@ export default {
   },
   mounted() {
     this.userMsg = JSON.parse(localStorage.getItem('userMsg'))
+    console.log(1)
+    this.getEventList()
     setTimeout(() => {
-      this.getEventList()
       let height = this.$refs.eventList.$el.offsetHeight
       this.$refs.events.style.minHeight = height - 25 + 'px'
     }, 20)
   },
   activated() {
-    if (this.refresh) {
-      this.getEventList()
-    }
+    this.getEventList()
   },
   methods: {
     addEvent() {
@@ -139,6 +138,7 @@ export default {
         }
       })
       this.eventList = list
+      this.$refs.eventList.refresh()
     },
     pulldown() {
       axios
@@ -190,7 +190,6 @@ export default {
 
   .header
     background-color $color-theme
-    width 100%
     height 44px
     line-height 44px
     padding-left 15px
@@ -203,7 +202,7 @@ export default {
       font-size 20px
       font-weight bold
       position absolute
-      right 30px
+      right 15px
       color #eee
 
   .eventList

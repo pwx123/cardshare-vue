@@ -121,7 +121,6 @@ export default {
 
   .header
     background-color $color-theme
-    width 100%
     height 44px
     line-height 44px
     padding-left 15px

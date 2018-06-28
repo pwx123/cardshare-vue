@@ -73,8 +73,7 @@ export default {
     }
   },
   methods: {
-    async _getCardList() {
-      await this._getUserMsg()
+    _getCardList() {
       axios
         .post('/users/getCardList', {
           loginUserEmail: this.$cookie.get('loginUserEmail')
@@ -83,20 +82,8 @@ export default {
           if (res.data.status === '0') {
             if (res.data.result) {
               this.cardList = this._sortCardList(res.data.result)
-              this.cardList.unshift({
-                items: [
-                  {
-                    cardid: 'self',
-                    email: this.user.loginUserEmail,
-                    phoneNum: this.user.phoneNum,
-                    userName: this.user.userName
-                  }
-                ],
-                title: '我'
-              })
-              this.setCardList(this.cardList)
+              this._getUserMsg()
             }
-            this.loading = false
           } else {
             console.log(res.data)
             this.loading = false
@@ -112,7 +99,20 @@ export default {
               'userMsg',
               JSON.stringify(res.data.result.user)
             )
+            this.cardList.unshift({
+              items: [
+                {
+                  cardid: 'self',
+                  email: this.user.loginUserEmail,
+                  phoneNum: this.user.phoneNum,
+                  userName: this.user.userName
+                }
+              ],
+              title: '我'
+            })
+            this.setCardList(this.cardList)
           }
+          this.loading = false
         } else {
           console.log(res.data)
         }
@@ -186,7 +186,6 @@ export default {
 
   .header
     background-color $color-theme
-    width 100%
     height 44px
     line-height 44px
     padding-left 15px
@@ -198,7 +197,7 @@ export default {
     i
       font-weight bold
       position absolute
-      right 30px
+      right 15px
 
   .list
     position fixed
