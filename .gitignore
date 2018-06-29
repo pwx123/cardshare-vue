@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 .bin/
 .idea/
-coverage/
+/test/unit/coverage/
 
 
 # Editor directories and files
@@ -17,3 +17,4 @@ coverage/
 *.njsproj
 *.sln
 *.log
+package-lock.json
