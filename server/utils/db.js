@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-const DB_URL = "mongodb://admin:980101@localhost:27017/cardshareNew";
+const DB_URL = "mongodb://admin:980101@0.0.0.0:27017/cardshareNew?authSource=admin";
 
 mongoose.connect(DB_URL);
 mongoose.connection.on('connected', () => {

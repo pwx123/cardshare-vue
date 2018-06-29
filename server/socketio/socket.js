@@ -6,8 +6,6 @@ socketio.getSocketio = function(server) {
   var io = socketIO.listen(server)
 
   io.sockets.on('connection', (socket) => {
-    console.log('链接成功')
-
     socket.on('startSend', (value) => {
       if (!value) {
         socket.emit('err', 'value is null')
@@ -41,10 +39,8 @@ socketio.getSocketio = function(server) {
       for (let i in SENDER) {
         if (SENDER[i].socketId === socket.id) {
           delete SENDER[i]
-          console.log(i + ' disconnect')
         }
       }
-      console.log(SENDER)
     })
   })
 }
