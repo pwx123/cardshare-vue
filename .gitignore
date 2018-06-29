@@ -7,6 +7,7 @@ yarn-error.log*
 .bin/
 .idea/
 /test/unit/coverage/
+/test/e2e/reports/
 
 
 # Editor directories and files
