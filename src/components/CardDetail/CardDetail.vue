@@ -79,6 +79,23 @@
               class="edit-input"
             >
           </li>
+          <li>
+            <span>地址</span>
+            <span
+              v-show="!isEdit"
+              class="value"
+            >
+              <router-link :to="{path:'/Map',query: {address: card.address}}">{{ card.address }}
+                <i class="icon iconfont icon-dingwei" />
+              </router-link>
+            </span>
+            <input
+              v-show="isEdit"
+              v-model="editcard.address"
+              type="text"
+              class="edit-input"
+            >
+          </li>
           <li
             v-show="card.cardid=='self'?false:true"
             class="li-btn"
@@ -235,6 +252,7 @@ export default {
         this.editcard.userName = this.card.userName
         this.editcard.phoneNum = this.card.phoneNum
         this.editcard.email = this.card.email
+        this.editcard.address = this.card.address
         this.isEdit = true
       }
     },

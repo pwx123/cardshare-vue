@@ -57,6 +57,9 @@
       :md-show="mdShow"
       @closeMd="closeMd"
     />
+    <div 
+      v-show="!eventList.length" 
+      class="nomsg">暂无消息</div>
   </div>
 </template>
 
@@ -204,7 +207,11 @@ export default {
       position absolute
       right 15px
       color #eee
-
+  .nomsg
+    width 100%
+    text-align center
+    margin-top 30px
+    font-size 14px
   .eventList
     position fixed
     top 45px

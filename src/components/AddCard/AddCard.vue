@@ -20,6 +20,12 @@
         class="email"
         placeholder="邮箱"
       ><br>
+      <input
+        v-model="address"
+        type="text"
+        class="email"
+        placeholder="地址"
+      ><br>
       <div class="btns">
         <div
           class="btn cancelbtn"
@@ -40,15 +46,15 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 import {
   getCardId,
   emailCheck,
   phoneNumCheck,
   stringCheck
-} from 'common/js/util'
-import { mapMutations } from 'vuex'
-import modal from 'base/modal/modal'
+} from "common/js/util";
+import { mapMutations } from "vuex";
+import modal from "base/modal/modal";
 
 export default {
   components: {
@@ -56,62 +62,69 @@ export default {
   },
   data() {
     return {
-      userName: '',
-      phoneNum: '',
-      email: '',
-      msg: '',
+      userName: "",
+      phoneNum: "",
+      email: "",
+      address: "",
+      msg: "",
       mdShow: false
-    }
+    };
   },
   methods: {
     add() {
       if (!stringCheck(this.userName)) {
-        this.msg = '姓名不能为空'
-        this.mdShow = true
-        return
+        this.msg = "姓名不能为空";
+        this.mdShow = true;
+        return;
       }
       if (!phoneNumCheck(this.phoneNum)) {
-        this.msg = '手机号码不符合规范'
-        this.mdShow = true
-        return
+        this.msg = "手机号码不符合规范";
+        this.mdShow = true;
+        return;
       }
       if (!emailCheck(this.email)) {
-        this.msg = '邮箱不符合规范'
-        this.mdShow = true
-        return
+        this.msg = "邮箱不符合规范";
+        this.mdShow = true;
+        return;
+      }
+      if (!this.address.length) {
+        this.msg = "地址不能为空";
+        this.mdShow = true;
+        return;
       }
       let card = {
-        cardid: getCardId(this.$cookie.get('loginUserEmail')),
+        cardid: getCardId(this.$cookie.get("loginUserEmail")),
         userName: this.userName,
         phoneNum: this.phoneNum,
         email: this.email,
-        key: ''
-      }
+        address: this.address,
+        key: ""
+      };
       axios
-        .post('/users/addCard', {
-          loginUserEmail: this.$cookie.get('loginUserEmail'),
+        .post("/users/addCard", {
+          loginUserEmail: this.$cookie.get("loginUserEmail"),
           card: card
         })
         .then(res => {
-          if (res.data.status === '0') {
-            this.setReFresh(true) // 重新加载CardList
-            this.$router.push('/CardList')
+          if (res.data.status === "0") {
+            this.setReFresh(true); // 重新加载CardList
+            this.$router.push("/CardList");
           } else {
-            console.log(res.data)
+            console.log(res.data);
           }
-        })
+        });
     },
     cancel() {
-      this.$router.push({ path: '/CardList' })
+      this.$router.push({ path: "/CardList" });
     },
     closeMd() {
-      this.mdShow = false
+      this.mdShow = false;
     },
     ...mapMutations({
-      setReFresh: 'SET_REFRESH_MUTATION'
+      setReFresh: "SET_REFRESH_MUTATION"
     })
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>

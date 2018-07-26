@@ -115,12 +115,13 @@ router.post('/login', function(req, res, next) {
 //     })
 // })
 router.post('/reg', function(req, res, next) {
+  let userName = req.body.userName;
   let loginUserEmail = req.body.loginUserEmail;
   let userPwd = req.body.userPwd;
   let newUser = new User({
     loginUserEmail: loginUserEmail,
     userPwd: userPwd,
-    userName: "",
+    userName: userName,
     newEventId: ""
   });
   User.find({
@@ -287,6 +288,7 @@ router.post('/editCard', function(req, res, next) {
   let key = getKey(userName);
   let phoneNum = req.body.card.phoneNum;
   let email = req.body.card.email;
+  let address = req.body.card.address;
   Card.update({
     loginUserEmail: loginUserEmail,
     "cardList.cardid": cardid
@@ -294,7 +296,8 @@ router.post('/editCard', function(req, res, next) {
     "cardList.$.key": key,
     "cardList.$.userName": userName,
     "cardList.$.phoneNum": phoneNum,
-    "cardList.$.email": email
+    "cardList.$.email": email,
+    "cardList.$.address": address,
   }, (err, doc) => {
     if (err) {
       res.json({
@@ -375,7 +378,7 @@ router.post('/addCard', function(req, res, next) {
   })
 })
 
-router.post('/hasNewEvent', function(req, res, next) {})
+// router.post('/hasNewEvent', function(req, res, next) {})
 router.post('/getEventList', function(req, res, next) {
   let loginUserEmail = req.body.loginUserEmail;
   getEventListStart(loginUserEmail)

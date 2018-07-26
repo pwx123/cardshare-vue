@@ -3,6 +3,12 @@
     <div class="reg">
       <h1>CardShare Register</h1>
       <input
+        v-model="userName"
+        type="text"
+        class="user"
+        placeholder="用户名"
+      ><br>
+      <input
         v-model="loginUserEmail"
         type="text"
         class="user"
@@ -34,10 +40,10 @@
 </template>
 
 <script>
-import modal from 'base/modal/modal'
-import axios from 'axios'
-import { emailCheck, pwdCheck } from 'common/js/util'
-import MD5 from 'crypto-js/md5'
+import modal from "base/modal/modal";
+import axios from "axios";
+import { emailCheck, pwdCheck } from "common/js/util";
+import MD5 from "crypto-js/md5";
 
 export default {
   components: {
@@ -45,47 +51,56 @@ export default {
   },
   data() {
     return {
-      loginUserEmail: '',
-      userPwd: '',
-      userPwdRep: '',
-      msg: '',
+      userName: "",
+      loginUserEmail: "",
+      userPwd: "",
+      userPwdRep: "",
+      msg: "",
       mdShow: false
-    }
+    };
   },
   methods: {
     reg() {
-      if (!emailCheck(this.loginUserEmail) || !pwdCheck(this.userPwd)) {
-        this.msg = '邮箱或密码格式不正确 \r\n 密码为6-18位字母开头的字母和数字'
-        this.mdShow = true
-        this.loginUserEmail = ''
-        this.userPwd = ''
-        this.userPwdRep = ''
-      } else if (this.userPwd !== this.userPwdRep) {
-        this.msg = '两次输入的密码不一致'
-        this.mdShow = true
-        this.userPwd = ''
-        this.userPwdRep = ''
-      } else {
-        axios
-          .post('/users/reg', {
-            loginUserEmail: this.loginUserEmail,
-            userPwd: MD5(this.userPwd).toString()
-          })
-          .then(res => {
-            if (res.data.status === '0') {
-              this.$router.push('/Login')
-            } else {
-              this.msg = res.data.msg
-              this.mdShow = true
-            }
-          })
+      if (!this.userName.length) {
+        this.msg = "用户名不能为空";
+        this.mdShow = true;
+        return;
       }
+      if (!emailCheck(this.loginUserEmail) || !pwdCheck(this.userPwd)) {
+        this.msg = "邮箱或密码格式不正确 \r\n 密码为6-18位字母开头的字母和数字";
+        this.mdShow = true;
+        this.loginUserEmail = "";
+        this.userPwd = "";
+        this.userPwdRep = "";
+        return;
+      }
+      if (this.userPwd !== this.userPwdRep) {
+        this.msg = "两次输入的密码不一致";
+        this.mdShow = true;
+        this.userPwd = "";
+        this.userPwdRep = "";
+        return;
+      }
+      axios
+        .post("/users/reg", {
+          userName: this.userName,
+          loginUserEmail: this.loginUserEmail,
+          userPwd: MD5(this.userPwd).toString()
+        })
+        .then(res => {
+          if (res.data.status === "0") {
+            this.$router.push("/Login");
+          } else {
+            this.msg = res.data.msg;
+            this.mdShow = true;
+          }
+        });
     },
     closeMd() {
-      this.mdShow = false
+      this.mdShow = false;
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>

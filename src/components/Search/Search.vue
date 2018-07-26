@@ -26,15 +26,19 @@
             <div class="items">
               <div class="item username">
                 <span>姓名:</span>
-                <span v-html="item.userName"/>
+                <span v-html="item.userName" />
               </div>
               <div class="item phoneNum">
                 <span>电话:</span>
-                <span v-html="item.phoneNum"/>
+                <span v-html="item.phoneNum" />
               </div>
               <div class="item email">
                 <span>邮箱:</span>
-                <span v-html="item.email"/>
+                <span v-html="item.email" />
+              </div>
+              <div class="item address">
+                <span>地址:</span>
+                <span v-html="item.address" />
               </div>
             </div>
           </li>
@@ -53,143 +57,150 @@
 </template>
 
 <script>
-import scroll from 'base/scroll/scroll'
-import { mapGetters, mapMutations } from 'vuex'
+import scroll from "base/scroll/scroll";
+import { mapGetters, mapMutations } from "vuex";
 export default {
-
   components: {
     scroll
   },
   data() {
     return {
       searchList: [],
-      search: '',
+      search: "",
       timeOut: undefined,
       colorList: [
-        'e91e63',
-        '74cb58',
-        '42a5f5',
-        '2979ff',
-        '4caf50',
-        'ffeb3b',
-        'cddc39'
+        "e91e63",
+        "74cb58",
+        "42a5f5",
+        "2979ff",
+        "4caf50",
+        "ffeb3b",
+        "cddc39"
       ]
-    }
+    };
   },
   computed: {
-    ...mapGetters({ dataList: 'cardList' })
+    ...mapGetters({ dataList: "cardList" })
   },
   mounted() {
     if (!this.dataList[0].items) {
       // 刷新dataList数据丢失 返回CardList
-      this.$router.push({ path: '/CardList' })
+      this.$router.push({ path: "/CardList" });
     }
   },
   methods: {
     searchCard() {
-      clearTimeout(this.timeOut)
+      clearTimeout(this.timeOut);
       if (this.search.length === 0) {
-        this.searchList = []
-        return
+        this.searchList = [];
+        return;
       }
       this.timeOut = setTimeout(() => {
-        this._searchList(this.dataList)
-      }, 400)
+        this._searchList(this.dataList);
+      }, 400);
     },
     setDetailCard(card, index) {
-      var newcard = this._getCard(card.cardid)
-      this.setCard(newcard)
+      var newcard = this._getCard(card.cardid);
+      this.setCard(newcard);
       this.$router.push({
-        path: '/CardDetail',
+        path: "/CardDetail",
         query: {
           color: this.colorList[index % 7]
         }
-      })
+      });
     },
     _getCard(cardId) {
       for (let i = 0; i < this.dataList.length; i++) {
         for (let j = 0; j < this.dataList[i].items.length; j++) {
-          if (this.dataList[i].items[j]['cardid'] === cardId) {
-            return this.dataList[i].items[j]
+          if (this.dataList[i].items[j]["cardid"] === cardId) {
+            return this.dataList[i].items[j];
           }
         }
       }
     },
     _searchList(dataList) {
-      this.searchList = []
+      this.searchList = [];
       for (let i = 0; i < dataList.length; i++) {
         for (let j = 0; j < dataList[i].items.length; j++) {
-          var flag = 0
-          var searchCard = Object.assign({}, dataList[i].items[j])
+          var flag = 0;
+          var searchCard = Object.assign({}, dataList[i].items[j]);
           var userName = this._setIndexOf(
-            dataList[i].items[j]['userName'],
+            dataList[i].items[j]["userName"],
             this.search
-          )
+          );
 
           var phoneNum = this._setIndexOf(
-            dataList[i].items[j]['phoneNum'],
+            dataList[i].items[j]["phoneNum"],
             this.search
-          )
+          );
 
           var email = this._setIndexOf(
-            dataList[i].items[j]['email'],
+            dataList[i].items[j]["email"],
             this.search
-          )
+          );
+          var address = this._setIndexOf(
+            dataList[i].items[j]["address"],
+            this.search
+          );
           if (userName) {
-            searchCard['userName'] = userName
-            flag = 1
+            searchCard["userName"] = userName;
+            flag = 1;
           }
           if (phoneNum) {
-            searchCard['phoneNum'] = phoneNum
-            flag = 1
+            searchCard["phoneNum"] = phoneNum;
+            flag = 1;
           }
           if (email) {
-            searchCard['email'] = email
-            flag = 1
+            searchCard["email"] = email;
+            flag = 1;
+          }
+          if (address) {
+            searchCard["address"] = address;
+            flag = 1;
           }
           if (flag) {
-            this.searchList.push(searchCard)
+            this.searchList.push(searchCard);
           }
-          searchCard = null
+          searchCard = null;
         }
       }
     },
     _setIndexOf(value, search) {
-      var indexs = []
-      var flag = 0
-      var index = 0
+      var indexs = [];
+      var flag = 0;
+      var index = 0;
       while (flag !== -1) {
-        flag = value.indexOf(search, index)
+        flag = value.indexOf(search, index);
         if (flag !== -1) {
-          indexs.push(flag)
+          indexs.push(flag);
         }
-        index = flag + search.length
+        index = flag + search.length;
         if (flag !== -1) {
-          indexs.push(index)
+          indexs.push(index);
         }
       }
       if (indexs.length === 0) {
-        return false
+        return false;
       } else {
-        return this._setHighLight(value, indexs)
+        return this._setHighLight(value, indexs);
       }
     },
     _setHighLight(value, indexs) {
-      var leftStr = "<span style='color:red'>"
-      var rightStr = '</span>'
-      var valueArr = [...value]
-      var count = 0
+      var leftStr = "<span style='color:red'>";
+      var rightStr = "</span>";
+      var valueArr = [...value];
+      var count = 0;
       for (let i = 0; i < indexs.length; i += 2) {
-        valueArr.splice(indexs[i] + count++, 0, leftStr)
-        valueArr.splice(indexs[i + 1] + count++, 0, rightStr)
+        valueArr.splice(indexs[i] + count++, 0, leftStr);
+        valueArr.splice(indexs[i + 1] + count++, 0, rightStr);
       }
-      return valueArr.join('')
+      return valueArr.join("");
     },
     ...mapMutations({
-      setCard: 'SET_CARD_MUTATION'
+      setCard: "SET_CARD_MUTATION"
     })
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
@@ -268,7 +279,7 @@ export default {
       .item
         margin 5px 10px
 
-      .email
+      .address
         margin-bottom 10px
 
 .slide-enter-active, .slide-leave-active

@@ -24,6 +24,7 @@ module.exports = {
     ],
     "space-before-function-paren": ["error", "never"],
     "no-new": 0,
-    "no-console": 0
+    "no-console": 0,
+    "no-undef": 0
   }
 }

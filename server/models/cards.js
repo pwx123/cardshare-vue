@@ -7,7 +7,8 @@ let cardSchema = new Schema({
     'key': String,
     'email': String,
     'userName': String,
-    'phoneNum': String
+    'phoneNum': String,
+    'address': String
   }]
 })
 

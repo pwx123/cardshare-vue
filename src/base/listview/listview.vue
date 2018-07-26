@@ -58,7 +58,7 @@
       <h1 class="fixed-title">{{ fixedTitle }}</h1>
     </div>
     <div
-      v-show="loading"
+      v-show="isloading"
       class="loading-container"
     >
       <loading/>
@@ -84,7 +84,7 @@ export default {
       type: Array,
       default: () => []
     },
-    loading: {
+    isloading: {
       type: Boolean,
       default: true
     }
@@ -223,6 +223,7 @@ export default {
 
 .listview
   width 100%
+  position relative
   overflow hidden
 
   .grouptitle
@@ -298,6 +299,8 @@ export default {
 .loading-container
   position absolute
   width 100%
-  top 50%
+  height 40px
+  top 200px
+  z-index 999
   transform translateY(-50%)
 </style>

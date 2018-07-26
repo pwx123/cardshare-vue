@@ -25,6 +25,8 @@ const UserMsg = () =>
   import (/* webpackChunkName: "UserMsg" */"@/components/UserMsg/UserMsg")
 const AddEvent = () =>
   import (/* webpackChunkName: "AddEvent" */"@/components/AddEvent/AddEvent")
+const Map = () =>
+  import (/* webpackChunkName: "Map" */"@/components/Map/Map")
 /* eslint-enable */
 Vue.use(Router)
 
@@ -84,5 +86,9 @@ export default new Router({
     path: '/AddEvent',
     name: 'AddEvent',
     component: AddEvent
+  }, {
+    path: '/Map',
+    name: 'Map',
+    component: Map
   }]
 })
