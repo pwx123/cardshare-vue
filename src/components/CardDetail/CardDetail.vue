@@ -32,69 +32,69 @@
           ref="scrolldetailul"
           class="scrolldetailul"
         >
-          <li>
-            <span>姓名</span>
-            <span
+          <li class="detail-list">
+            <div class="name">姓名</div>
+            <div
               v-show="!isEdit"
               class="value"
-            >{{ card.userName }}</span>
-            <input
-              v-show="isEdit"
-              v-model="editcard.userName"
-              type="text"
-              class="edit-input"
-            >
+            >{{ card.userName }}</div>
+            <div v-show="isEdit">
+              <input
+                v-model="editcard.userName"
+                type="text"
+                class="edit-input"
+            ></div>
           </li>
-          <li>
-            <span>电话</span>
-            <span
+          <li class="detail-list">
+            <div class="name">电话</div>
+            <div
               v-show="!isEdit"
               class="value"
             >
               <a :href="'tel:'+card.phoneNum">{{ card.phoneNum }}
                 <i class="icon iconfont icon-jisuanqi" />
               </a>
-            </span>
-            <input
-              v-show="isEdit"
-              v-model="editcard.phoneNum"
-              type="text"
-              class="edit-input"
-            >
+            </div>
+            <div v-show="isEdit">
+              <input
+                v-model="editcard.phoneNum"
+                type="text"
+                class="edit-input"
+            ></div>
           </li>
-          <li>
-            <span>邮箱</span>
-            <span
+          <li class="detail-list">
+            <div class="name">邮箱</div>
+            <div
               v-show="!isEdit"
               class="value"
             >
               <a :href="'mailto:'+card.email">{{ card.email }}
                 <i class="icon iconfont icon-youjianduanxin" />
               </a>
-            </span>
-            <input
-              v-show="isEdit"
-              v-model="editcard.email"
-              type="text"
-              class="edit-input"
-            >
+            </div>
+            <div v-show="isEdit">
+              <input
+                v-model="editcard.email"
+                type="text"
+                class="edit-input"
+            ></div>
           </li>
-          <li>
-            <span>地址</span>
-            <span
+          <li class="detail-list">
+            <div class="name">地址</div>
+            <div
               v-show="!isEdit"
               class="value"
             >
               <router-link :to="{path:'/Map',query: {address: card.address}}">{{ card.address }}
                 <i class="icon iconfont icon-dingwei" />
               </router-link>
-            </span>
-            <input
-              v-show="isEdit"
-              v-model="editcard.address"
-              type="text"
-              class="edit-input"
-            >
+            </div>
+            <div v-show="isEdit">
+              <input
+                v-model="editcard.address"
+                type="text"
+                class="edit-input"
+            ></div>
           </li>
           <li
             v-show="card.cardid=='self'?false:true"
@@ -171,14 +171,14 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import { emailCheck, phoneNumCheck, stringCheck } from 'common/js/util'
-import axios from 'axios'
-import scroll from 'base/scroll/scroll'
-import modal from 'base/modal/modal'
+import { mapGetters, mapMutations } from "vuex";
+import { emailCheck, phoneNumCheck, stringCheck } from "common/js/util";
+import axios from "axios";
+import scroll from "base/scroll/scroll";
+import modal from "base/modal/modal";
 
-const MIN_SCROLL = 50
-const HEADER_HEIGHT = 250
+const MIN_SCROLL = 50;
+const HEADER_HEIGHT = 250;
 
 export default {
   components: {
@@ -190,150 +190,150 @@ export default {
       scrollY: 0,
       isEdit: false,
       editcard: {},
-      slide: 'slide',
-      color: '#' + this.$route.query.color,
+      slide: "slide",
+      color: "#" + this.$route.query.color,
       canremove: false,
       modalshare: false,
-      msg: '',
+      msg: "",
       mdShow: false
-    }
+    };
   },
   computed: {
-    ...mapGetters(['card']),
+    ...mapGetters(["card"]),
     userNameCharAt() {
       if (this.card) {
-        return this.card.userName.charAt(0)
+        return this.card.userName.charAt(0);
       }
     }
   },
   watch: {
     scrollY(newY) {
       if (-newY < HEADER_HEIGHT - MIN_SCROLL && newY < 0) {
-        this.$refs.header.style.height = HEADER_HEIGHT + 'px'
-        this.$refs.header.style.zIndex = 0
-        this.$refs.header.style.transform = `scale(1)`
-        this.$refs.layer.style.transform = `translate3d(0,${newY}px,0)`
+        this.$refs.header.style.height = HEADER_HEIGHT + "px";
+        this.$refs.header.style.zIndex = 0;
+        this.$refs.header.style.transform = `scale(1)`;
+        this.$refs.layer.style.transform = `translate3d(0,${newY}px,0)`;
         this.$refs.picname.style.transform = `translate3d(${newY /
           40 *
-          9}px,${newY}px,0)`
+          9}px,${newY}px,0)`;
       } else if (newY < 0) {
-        this.$refs.header.style.height = MIN_SCROLL + 'px'
-        this.$refs.header.style.zIndex = 10
-        this.$refs.layer.style.transform = `translate3d(0,-190px,0)`
-        this.$refs.picname.style.transform = `translate3d(-40px,-190px,0)`
+        this.$refs.header.style.height = MIN_SCROLL + "px";
+        this.$refs.header.style.zIndex = 10;
+        this.$refs.layer.style.transform = `translate3d(0,-190px,0)`;
+        this.$refs.picname.style.transform = `translate3d(-40px,-190px,0)`;
       }
       if (newY > 0) {
-        let height = HEADER_HEIGHT + newY
-        let delta = height / HEADER_HEIGHT
-        this.$refs.header.style.zIndex = 10
-        this.$refs.header.style.transform = `scale(${delta})`
-        this.$refs.layer.style.transform = `translate3d(0,0,0)`
-        this.$refs.picname.style.transform = `translate3d(0,0,0)`
+        let height = HEADER_HEIGHT + newY;
+        let delta = height / HEADER_HEIGHT;
+        this.$refs.header.style.zIndex = 10;
+        this.$refs.header.style.transform = `scale(${delta})`;
+        this.$refs.layer.style.transform = `translate3d(0,0,0)`;
+        this.$refs.picname.style.transform = `translate3d(0,0,0)`;
       }
     }
   },
   mounted() {
-    this._getStart()
+    this._getStart();
   },
   created() {
-    this.listenScroll = true
-    this.probetype = 3
+    this.listenScroll = true;
+    this.probetype = 3;
   },
   methods: {
     scroll(pos) {
-      this.scrollY = pos.y
+      this.scrollY = pos.y;
     },
     editOrcancel() {
       if (this.isEdit) {
-        this.isEdit = false
+        this.isEdit = false;
       } else {
-        this.editcard.key = this.card.key
-        this.editcard.cardid = this.card.cardid
-        this.editcard.userName = this.card.userName
-        this.editcard.phoneNum = this.card.phoneNum
-        this.editcard.email = this.card.email
-        this.editcard.address = this.card.address
-        this.isEdit = true
+        this.editcard.key = this.card.key;
+        this.editcard.cardid = this.card.cardid;
+        this.editcard.userName = this.card.userName;
+        this.editcard.phoneNum = this.card.phoneNum;
+        this.editcard.email = this.card.email;
+        this.editcard.address = this.card.address;
+        this.isEdit = true;
       }
     },
     cencel() {
-      this.canremove = false
+      this.canremove = false;
     },
     share() {
-      this.modalshare = true
+      this.modalshare = true;
     },
     closeShare() {
-      this.modalshare = false
+      this.modalshare = false;
     },
     remove() {
       axios
-        .post('/users/removeCard', {
-          loginUserEmail: this.$cookie.get('loginUserEmail'),
+        .post("/users/removeCard", {
+          loginUserEmail: this.$cookie.get("loginUserEmail"),
           cardId: this.card.cardid
         })
         .then(res => {
-          if (res.data.status === '0') {
-            this.setReFresh(true) // 重新加载CardList
-            this.$router.push({ path: '/CardList' })
+          if (res.data.status === "0") {
+            this.setReFresh(true); // 重新加载CardList
+            this.$router.push({ path: "/CardList" });
           } else {
-            console.log(res.data)
+            console.log(res.data);
           }
-        })
+        });
     },
     removeOrsave() {
       if (this.isEdit) {
         if (!stringCheck(this.editcard.userName)) {
-          this.msg = '姓名不能为空'
-          this.mdShow = true
-          return
+          this.msg = "姓名不能为空";
+          this.mdShow = true;
+          return;
         }
         if (!phoneNumCheck(this.editcard.phoneNum)) {
-          this.msg = '手机号码不符合规范'
-          this.mdShow = true
-          return
+          this.msg = "手机号码不符合规范";
+          this.mdShow = true;
+          return;
         }
         if (!emailCheck(this.editcard.email)) {
-          this.msg = '邮箱不符合规范'
-          this.mdShow = true
-          return
+          this.msg = "邮箱不符合规范";
+          this.mdShow = true;
+          return;
         }
         axios
-          .post('/users/editCard', {
-            loginUserEmail: this.$cookie.get('loginUserEmail'),
+          .post("/users/editCard", {
+            loginUserEmail: this.$cookie.get("loginUserEmail"),
             card: this.editcard
           })
           .then(res => {
-            if (res.data.status === '0') {
-              this.setReFresh(true) // 重新加载CardList
-              this.isEdit = false
-              this.setCard(this.editcard)
+            if (res.data.status === "0") {
+              this.setReFresh(true); // 重新加载CardList
+              this.isEdit = false;
+              this.setCard(this.editcard);
             } else {
-              console.log(res.data)
+              console.log(res.data);
             }
-          })
+          });
       } else {
-        this.canremove = true
+        this.canremove = true;
       }
     },
     _getStart() {
       if (!this.card.userName) {
-        this.$router.push('/CardList')
-        return
+        this.$router.push("/CardList");
+        return;
       }
       setTimeout(() => {
         this.$refs.scrolldetailul.style.height =
-          this.$refs.scrolldetail.$el.offsetHeight + 250 - 50 + 'px'
-      }, 20)
+          this.$refs.scrolldetail.$el.offsetHeight + 250 - 50 + "px";
+      }, 20);
     },
     closeMd() {
-      this.mdShow = false
+      this.mdShow = false;
     },
     ...mapMutations({
-      setCard: 'SET_CARD_MUTATION',
-      setReFresh: 'SET_REFRESH_MUTATION'
+      setCard: "SET_CARD_MUTATION",
+      setReFresh: "SET_REFRESH_MUTATION"
     })
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
@@ -402,14 +402,27 @@ export default {
         border-bottom 1px solid #bbb
         padding 0 10px
 
-        .value
-          margin-left 40px
+        &.detail-list
+          display flex
+          position relative
+          flex-wrap nowrap
+          div
+            overflow hidden
+            word-break keep-all
+            white-space nowrap
+            text-overflow ellipsis          
+          .name
+            width 60px
+          .value
+            flex-grow 1
+            box-sizing border-box
+            padding-right 20px
 
           i
-            color #666
-            float right
-            margin-right 20px
-            font-size 20px
+            display block
+            position absolute
+            right 10px
+            top 0
 
         .edit-input
           width 160px

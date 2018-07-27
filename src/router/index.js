@@ -2,31 +2,31 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /* eslint-disable */
 const CardList = () =>
-  import (/* webpackChunkName: "CardList" */"@/components/CardList/CardList")
+  import ( /* webpackChunkName: "CardList" */ "@/components/CardList/CardList")
 const Account = () =>
-  import (/* webpackChunkName: "Account" */"@/components/Account/Account")
+  import ( /* webpackChunkName: "Account" */ "@/components/Account/Account")
 const Event = () =>
-  import (/* webpackChunkName: "Event" */"@/components/Event/Event")
+  import ( /* webpackChunkName: "Event" */ "@/components/Event/Event")
 const CardDetail = () =>
-  import (/* webpackChunkName: "CardDetail" */"@/components/CardDetail/CardDetail")
+  import ( /* webpackChunkName: "CardDetail" */ "@/components/CardDetail/CardDetail")
 const Login = () =>
-  import (/* webpackChunkName: "Login" */"@/components/Login/Login")
+  import ( /* webpackChunkName: "Login" */ "@/components/Login/Login")
 const Reg = () =>
-  import (/* webpackChunkName: "Reg" */"@/components/Reg/Reg")
+  import ( /* webpackChunkName: "Reg" */ "@/components/Reg/Reg")
 const Send = () =>
-  import (/* webpackChunkName: "Send" */"@/components/Send/Send")
+  import ( /* webpackChunkName: "Send" */ "@/components/Send/Send")
 const Receive = () =>
-  import (/* webpackChunkName: "Receive" */"@/components/Receive/Receive")
+  import ( /* webpackChunkName: "Receive" */ "@/components/Receive/Receive")
 const AddCard = () =>
-  import (/* webpackChunkName: "AddCard" */"@/components/AddCard/AddCard")
+  import ( /* webpackChunkName: "AddCard" */ "@/components/AddCard/AddCard")
 const Search = () =>
-  import (/* webpackChunkName: "Search" */"@/components/Search/Search")
+  import ( /* webpackChunkName: "Search" */ "@/components/Search/Search")
 const UserMsg = () =>
-  import (/* webpackChunkName: "UserMsg" */"@/components/UserMsg/UserMsg")
+  import ( /* webpackChunkName: "UserMsg" */ "@/components/UserMsg/UserMsg")
 const AddEvent = () =>
-  import (/* webpackChunkName: "AddEvent" */"@/components/AddEvent/AddEvent")
+  import ( /* webpackChunkName: "AddEvent" */ "@/components/AddEvent/AddEvent")
 const Map = () =>
-  import (/* webpackChunkName: "Map" */"@/components/Map/Map")
+  import ( /* webpackChunkName: "Map" */ "@/components/Map/Map")
 /* eslint-enable */
 Vue.use(Router)
 
@@ -89,6 +89,9 @@ export default new Router({
   }, {
     path: '/Map',
     name: 'Map',
+    meta: {
+      fullScreen: true
+    },
     component: Map
   }]
 })

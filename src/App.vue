@@ -3,18 +3,22 @@
     <keep-alive include="CardList,Event">
       <router-view/>
     </keep-alive>
-    <tab/>
+    <tab v-if="!$route.meta.fullScreen" />
   </div>
 </template>
 
 <script>
-import tab from '@/components/Tab/Tab'
+import tab from "@/components/Tab/Tab";
+
 export default {
   components: {
     tab
   }
-}
+};
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
+html, body, #app
+  width 100%
+  height 100%
 </style>
