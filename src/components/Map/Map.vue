@@ -25,9 +25,11 @@ export default {
   data() {
     return {
       address: "",
+      addressPoint: undefined,
       hasBoundary: false,
       map: undefined,
-      position: undefined
+      localPosition: undefined,
+      localPositionPoint: undefined
     };
   },
   mounted() {
@@ -53,7 +55,6 @@ export default {
       this.getBoundaryMap(map);
     },
     addControlMap(map) {
-      //添加地图类型控件
       var _this = this;
       // 缩放控件
       var navigation = new BMap.NavigationControl({
@@ -92,6 +93,7 @@ export default {
       // 将地址解析结果显示在地图上,并调整地图视野
       myGeo.getPoint(this.address, function(point) {
         if (point) {
+          _this.addressPoint = point;
           if (!_this.hasBoundary) {
             map.centerAndZoom(point, 14);
           }
@@ -106,8 +108,7 @@ export default {
       var _this = this;
       var bdary = new BMap.Boundary();
       bdary.get(this.address, function(rs) {
-        //获取行政区域
-        var count = rs.boundaries.length; //行政区域的点有多少个
+        var count = rs.boundaries.length;
         if (count === 0) {
           _this.getGeocoder(map);
           return;
@@ -122,6 +123,7 @@ export default {
           map.addOverlay(ply); //添加覆盖物
           pointArray = pointArray.concat(ply.getPath());
         }
+        // 添加中心点 不移动
         _this.getGeocoder(map);
         map.setViewport(pointArray); //调整视野
       });
