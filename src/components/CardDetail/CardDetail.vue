@@ -426,7 +426,6 @@ export default {
 
         .edit-input
           width 160px
-          margin-left 40px
           height 30px
           outline none
           font-size 16px

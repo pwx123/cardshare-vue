@@ -27,7 +27,8 @@ export default {
       address: "",
       hasBoundary: false,
       map: undefined,
-      position: undefined
+      position: undefined,
+      localAddress: ""
     };
   },
   mounted() {
@@ -71,7 +72,7 @@ export default {
         address += e.addressComponent.district;
         address += e.addressComponent.street;
         address += e.addressComponent.streetNumber;
-        _this.address = address;
+        _this.localAddress = address;
         _this.position = e.point;
       });
       geolocationControl.addEventListener("locationError", function(e) {
@@ -107,6 +108,7 @@ export default {
       var bdary = new BMap.Boundary();
       bdary.get(this.address, function(rs) {
         //获取行政区域
+        console.log(rs)
         var count = rs.boundaries.length; //行政区域的点有多少个
         if (count === 0) {
           _this.getGeocoder(map);
