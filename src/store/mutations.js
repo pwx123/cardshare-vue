@@ -12,6 +12,9 @@ const mutations = {
   },
   [types.SET_USERMSG_MUTATION](state, payload) {
     state.userMsg = payload
+  },
+  [types.SET_ROUTEMSG_MUTATION](state, payload) {
+    state.routeMsg = payload
   }
 }
 

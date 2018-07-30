@@ -10,6 +10,9 @@ const getters = {
   },
   userMsg: (state) => {
     return state.userMsg
+  },
+  routeMsg: (staet) => {
+    return staet.routeMsg
   }
 }
 

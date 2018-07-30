@@ -13,6 +13,12 @@ const state = {
     'newEventId': '',
     'phoneNum': '',
     'userName': ''
+  },
+  routeMsg: {
+    address: undefined,
+    addressPoint: undefined,
+    localPosition: undefined,
+    localPositionPoint: undefined
   }
 }
 

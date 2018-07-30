@@ -27,6 +27,8 @@ const AddEvent = () =>
   import ( /* webpackChunkName: "AddEvent" */ "@/components/AddEvent/AddEvent")
 const Map = () =>
   import ( /* webpackChunkName: "Map" */ "@/components/Map/Map")
+const RouteView = () =>
+  import ( /* webpackChunkName: "RouteView" */ "@/components/RouteView/RouteView")
 /* eslint-enable */
 Vue.use(Router)
 
@@ -93,5 +95,12 @@ export default new Router({
       fullScreen: true
     },
     component: Map
+  }, {
+    path: '/RouteView',
+    name: 'RouteView',
+    meta: {
+      fullScreen: true
+    },
+    component: RouteView
   }]
 })
