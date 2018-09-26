@@ -5,9 +5,9 @@ yarn-debug.log*
 yarn-error.log*
 .bin/
 .idea/
-/test/unit/coverage/
-/test/e2e/reports/
-
+test/
+dist/*
+.vscode/
 
 # Editor directories and files
 .idea
