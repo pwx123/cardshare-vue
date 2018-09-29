@@ -1,8 +1,4 @@
-<p align="center">
-  <a href="https://github.com/pwx123/cardshare-vue" target="_blank">
-    <font size=20>cardshare</font>
-  </a>
-</p>
+# cardshare
 
 课程需要编写的一个实现名片面对面分享的功能，需求是实现APP，但是用web的方式实现了基本功能。引入了百度地图api，实现了地理位置的基本操作。
 
